@@ -4,6 +4,8 @@
 
 jQuery.tree_node = jQuery("<li class='tree_node empty'>  <button class='toggle'></button>  <span>Tree Node</span>  <ol></ol></li>");
 
+jQuery.toggle_button = jQuery("<button class='toggle'></button>");
+
 ;(function(_){
 _.fn.extend({
   child_list: function() {
@@ -39,4 +41,12 @@ _.fn.extend({
     return this.find('.toggle:first');
   }
 });
+})(jQuery);
+
+
+;(function(_) {
+  _.tree_node.find('li').prepend(_.toggle_button);
+  _.fn.extend({
+  
+  });
 })(jQuery);
