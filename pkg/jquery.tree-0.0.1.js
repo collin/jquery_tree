@@ -207,6 +207,24 @@ jQuery.tree.node = _.dom_node;
         ,do_not_hide_label: true
       }    
     }
+  
+    ,new_class: function() {
+      var cls = _('<li>');
+      this.class_list().append(cls);
+      return this.edit_class(cls);
+    }
+  
+    ,previous_class: function(cls) {
+      var prev = cls.prev('li').prev('li').prev('li');
+      if(prev.length) return this.edit_class(prev);
+      return this.prev().fn('edit');
+    }
+    
+    ,next_class: function(cls) {
+      var next = cls.next('li');
+      if(next.length) return this.edit_class(next);
+      return this.next().fn('edit');
+    }
   });
 })(jQuery);
 
