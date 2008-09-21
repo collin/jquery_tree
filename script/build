@@ -67,7 +67,10 @@ module JQuery
           scripts << script
         end
         
-        vendor = Pathname.glob(Root/'vendor'/'**'/'*.js')
+        vendor = []
+        vendor << Root/'vendor'/'effen'/'jquery.fn.js'
+        vendor << Root/'vendor'/'jquery_extensions'/'jquery.extension.js'
+        vendor << Root/'vendor'/'jquery_keybinder'/'jquery.keybinder.js'
         
         f = File.open(Root/'pkg'/"jquery.tree-#{Version}.js", 'w+')
         f.write(scripts_string = scripts.map{|script| script.read}.join("\n\n"))
