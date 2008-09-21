@@ -1,0 +1,13 @@
+@import button_plugin.sass
+li
+  &.inspected
+    &> button.disable
+      :background
+        :color transparent
+        :image url(#{JQuery::Tree::UriRoot}/icons/block.png) 
+
+  button.disable
+    +button_plugin
+    :margin-right 10px
+    &.active
+      :background-image url(#{JQuery::Tree::UriRoot}/icons/active_block.png) 

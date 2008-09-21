@@ -1,6 +1,15 @@
 ;(function(_) {
-  _.tree_node.find('li').prepend(_.<%= name %>_button);
-  _.fn.extend({
+  _.inject_<%= name %>_dom = function() {
+    _.tree_node.prepend(_.<%= name %>_button]);
+  }
   
+  _.fn.extend({
+    <%= name %>_button: function() {
+      return this.find('.<%= name %>:first');
+    }
+    
+    ,<%= name %>_click: function() {
+      
+    }
   });
 })(jQuery);

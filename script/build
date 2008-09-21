@@ -24,7 +24,8 @@ module JQuery
       watches :sass,
         :files => Root/'lib'/'**'/'*.css.sass',
         :module => Sass,
-        :style => :compressed
+        :style => :compressed,
+        :load_paths => Pathname.glob(Root/'lib'/'**'/'sass')
         
       watches :resources,
         :files => Root/'lib'/'**'/'*{.css,.js,.html}',
