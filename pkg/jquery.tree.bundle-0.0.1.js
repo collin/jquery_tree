@@ -422,15 +422,20 @@ jQuery.tree.node = _.dom_node;
   _.inject_classes_dom = function() {
     _.dom_node.find('.element').append(_.classes_label);
   }
-  
-  
+
   _.classes_label.fn({
     edit: function() {
       var first_class = this.class_list().find('li:first');
       if(first_class.length) return this.edit_class(first_class);
       return this.new_class();    
     }
-    
+  });
+  
+  _.fn.extend({
+    class_list: function() {
+      return this.find('.classes:first');
+    }
+
     ,edit_class: function() {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
@@ -447,12 +452,6 @@ jQuery.tree.node = _.dom_node;
         ,remove_if_empty: true
         ,do_not_hide_label: true
       }    
-    }
-  });
-  
-  _.fn.extend({
-    class_list: function() {
-      return this.find('.classes:first');
     }
   });
 })(jQuery);
