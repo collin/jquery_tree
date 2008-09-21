@@ -83,8 +83,137 @@
 })(jQuery);
 
 
+// Look, I'm like all the cool kids!
+;(function(_) {
+  _.special_keys = {
+	  27:'esc',
+	  9:'tab',
+	  32:'space',
+	  13:'enter',
+	  8:'backspace',
+
+	  145:'scroll_lock',
+	  20:'caps_lock',
+	  144:'num_lock',
+	
+	  19:'pause',
+	
+	  45:'insert',
+	  36:'home',
+	  46:'delete',
+	  35:'end',
+	
+	  33:'page_up',
+
+	  34:'page_down',
+
+	  37:'left',
+	  38:'up',
+	  39:'right',
+	  40:'down',
+
+	  112:'f1',
+	  113:'f2',
+	  114:'f3',
+	  115:'f4',
+	  116:'f5',
+	  117:'f6',
+	  118:'f7',
+	  119:'f8',
+	  120:'f9',
+	  121:'f10',
+	  122:'f11',
+	  123:'f12',
+  };
+
+  _.shift_nums = {
+	  "`":"~",
+	  "1":"!",
+	  "2":"@",
+	  "3":"#",
+	  "4":"$",
+	  "5":"%",
+	  "6":"^",
+	  "7":"&",
+	  "8":"*",
+	  "9":"(",
+	  "0":")",
+	  "-":"_",
+	  "=":"+",
+	  ";":":",
+	  "'":"\"",
+	  ",":"<",
+	  ".":">",
+	  "/":"?",
+	  "\\":"|"
+  };
+  _.fn.extend({
+    keybindings: function(bindings) {
+      var old = this.data("__keybindings__") || {};
+      if(bindings) {
+        return this.data("__keybindings__", _.extend(old, bindings));
+      } 
+      return old;
+    }
+    
+    ,keybind: function(binding, fn) {
+      var bindings = {}
+        ,that = this;
+      bindings[binding] = fn;
+      this.keybindings(bindings);
+      if(!this.data("__keybound__")) {
+        this.data("__keybound__", true);
+        this.keydown(function(e){
+          var bindings = that.keybindings()
+            ,binding
+            ,keys
+            ,modified
+            ,matched
+            ,modKeys = 'shift ctrl alt meta'.split(/ /)
+            ,key
+            ,requested_presses
+            ,presses; 
+          
+          if(_.special_keys[e.keyCode]) key = _.special_keys[e.keyCode];        
+          else if(e.keyCode == 188) key=","; //If the user presses , when the type is onkeydown
+			    else if(e.keyCode == 190) key="."; //If the user presses , when the type is onkeydown
+          else if(e.charCode != 0) key = String.fromCharCode(e.charCode); 
+          
+          for(binding in bindings) {
+            presses = 0;
+            requested_presses = binding.split('+').length;
+            modified = true;
+            _(modKeys).each(function() {
+              // false if the modifier is wanted, but it isn't given
+              if(binding.match(this) !== null) modified = e[this+"Key"];
+              if(e[this+"Key"]) presses++;
+              //console.log(binding.match(this) !== null, this, binding, modified, e[this+"Key"])
+            });
+            keys = binding.replace(/shift|ctrl|alt|meta/, '').split(/\++/);
+            matched = false;
+            _(keys).each(function() {
+              if(this !== "") 
+                if(this == key) {
+                  matched = true;
+                  presses++;
+                }
+            });
+            if(modified && matched && presses === requested_presses) {
+              bindings[binding].call(this, e);
+              e.preventDefault();
+              break;
+            }
+          }
+        });
+      }
+      return this;
+    }
+  });  
+})(jQuery);
+
+
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{font-size:.7em;font-family:sans-serif}.tree .tree_node.dragging{position:absolute;border:1px outset;background-color:white !important;z-index:10000000000}.tree .tree_node.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .tree_node .toggle{border:none;background:none;width:16px;height:16px;display:inline;float:left;position:relative;top:2px;top:4px}.tree .tree_node .toggle.closed{background-image:url(/icons/open.png)}.tree .tree_node.empty > button.toggle{visibility:hidden}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree ol .inspected{background-color:#fcc}.tree ol .inspected .tree_node{background-color:white}.tree ol li{white-space:nowrap;display:block;clear:both;padding-left:10px;margin-left:0px}.tree.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px}.tree .toggle.closed{background-image:url(/icons/open.png)}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(/icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(/icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(/icons/destroy.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:\"<\";margin-right:-.3em}li.tree_node .element:after{content:\">\";margin-left:-.3em}</style>");
+  jQuery("head").append("<style>.tree{font-size:.7em;font-family:sans-serif}.tree .tree_node.dragging{position:absolute;border:1px outset;background-color:white !important;z-index:10000000000}.tree .tree_node.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .tree_node .toggle{border:none;background:none;width:16px;height:16px;display:inline;float:left;position:relative;top:2px;top:4px}.tree .tree_node .toggle.closed{background-image:url(/icons/open.png)}.tree .tree_node.empty > button.toggle{visibility:hidden}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree ol .inspected{background-color:#fcc}.tree ol .inspected .tree_node{background-color:white}.tree ol li{white-space:nowrap;display:block;clear:both;padding-left:10px;margin-left:0px}.tree.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px}.tree .toggle.closed{background-image:url(/icons/open.png)}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(/icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(/icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(/icons/destroy.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:\"<\";margin-right:-.3em}li.tree_node .element:after{content:\">\";margin-left:-.3em}li.tree_node .id{display:inline;color:red;margin-left:-.3em}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}</style>");
 }));
 
 jQuery.tree_node = jQuery("<li class='tree_node empty'>  <ol></ol></li>");
@@ -102,6 +231,10 @@ jQuery.tag_name_input = jQuery("<input type='text'>.tag_name</input>");
 jQuery.tag_name_label = jQuery("<label/>");
 
 jQuery.dom_node = jQuery("<li class='tree_node empty'>  <div class='element'></div>  <ol></ol></li>");
+
+jQuery.id_input = jQuery("<input type='text'>.id</input>");
+
+jQuery.id_label = jQuery("<div class=\"id\"/>");
 
 ;(function(_) {
   var closed_class = 'closed'
@@ -210,39 +343,39 @@ jQuery.dom_node = jQuery("<li class='tree_node empty'>  <div class='element'></d
       });
     }
   });
-  
-  _.tag_input
-    .keyup_size_to_fit()
-    .keybind('tab', edit_id)
-    .keybind('shift+3', edit_id)
-    .keybind('space', edit_id)
-    .keybind('shift+tab', edit_classes)
-    .keybind('.', edit_classes)
-    .blur(function(e) {
-        var _this = _(this)
-          ,node = _this.parent_node()
-          ,dom_element = node.dom_element()
-          ,new_el
-          ,tag_name = _this.val();
-        // blur handlers get out of order
-        
-          if(dom_element.length) return dom_element.swap_tag(tag_name);
-          node.create_dom_element(tag_name);
-      })
-    .autocompleteArray(_.elements, {
-        autoFill: true
-        ,delay: 0
-        ,mustMatch: true
-        ,selectFirst: true
-        ,onAutofill: function(input) {
-          input.size_to_fit();
-        }
-      });
-
 })(jQuery);
 
 
 jQuery.tree.node = _.dom_node;
+
+
+;(function(_) {
+  _.inject_id_dom = function() {
+    _.dom_node.find('.element').append(_.id_label);
+  }
+  
+  _.fn.extend({
+    id_label: function() {
+      return this.find('.id:first');
+    }
+    ,edit_id: function() {
+/*
+  insertion_method: method to insert the input: 'append', 'before', etc.
+    defaults to 'after'
+  do_not_hide_label: keep the label around so it's css will apply
+  default_value: set the label to this if the value is ""
+  hide_if_empty: hide the label if the value is ""
+  remove_if_empty: remove the label if the value is ""
+*/  
+      return this.edit_label({
+        label: this.id_label()
+        ,input: _.id_input
+        ,hide_if_empty: true
+        ,do_not_hide_label: true
+      });
+    }
+  });
+})(jQuery);
 
 
 // PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
