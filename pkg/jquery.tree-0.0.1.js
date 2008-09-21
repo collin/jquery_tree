@@ -118,26 +118,21 @@ jQuery.classes_label = jQuery("<li class=\"classes\"/>");
 ;(function(_) {
   _.inject_tag_name_dom = function() {
     _.dom_node.find('.element').append(_.tag_name_label);
+    _(document.body).append(_.tag_name_input);
   }
   
-  _.tag_name.fn('edit', function() {
-    this.parent_node().edit_label({
-      label: this
-      ,input: this.tag_name_label
+  _.tag_name_label.fn('edit', function() {
+    var node = parent_node();
+    return node.edit_label({
+      label: node.tag_name_label()
+      ,input: _.tag_name_input
+      ,default_value: 'div'
     });
   });
   
   _.fn.extend({
     tag_name_label: function() {
       return this.find('label:first');
-    }
-    
-    ,edit_tag_name: function() {
-      return this.edit_label({
-        label: this.tag_name_label()
-        ,input: _.tag_name_input
-        ,default_value: 'div'
-      });
     }
   });
 })(jQuery);
@@ -150,12 +145,8 @@ jQuery.tree.node = _.dom_node;
   _.inject_id_dom = function() {
     _.dom_node.find('.element').append(_.id_label);
   }
-  
-  _.fn.extend({
-    id_label: function() {
-      return this.find('.id:first');
-    }
-    ,edit_id: function() {
+
+  _.id_label.fn('edit', {function() {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
     defaults to 'after'
@@ -164,12 +155,18 @@ jQuery.tree.node = _.dom_node;
   hide_if_empty: hide the label if the value is ""
   remove_if_empty: remove the label if the value is ""
 */  
-      return this.edit_label({
-        label: this.id_label()
-        ,input: _.id_input
-        ,hide_if_empty: true
-        ,do_not_hide_label: true
-      });
+    var node = this.parent_node();"
+    return node.edit_label({
+      label: node.id_label()
+      ,input: _.id_input
+      ,hide_if_empty: true
+      ,do_not_hide_label: true
+    });
+  });
+  
+  _.fn.extend({
+    id_label: function() {
+      return this.find('.id:first');
     }
   });
 })(jQuery);
@@ -180,11 +177,15 @@ jQuery.tree.node = _.dom_node;
     _.dom_node.find('.element').append(_.classes_label);
   }
   
-  _.fn.extend({
-    classes_list: function() {
-      return this.find('.classes:first');
+  
+  _.classes_label.fn({
+    edit: function() {
+      var first_class = this.class_list().find('li:first');
+      if(first_class.length) return this.edit_class(first_class);
+      return this.new_class();    
     }
-    ,edit_classes: function() {
+    
+    ,edit_class: function() {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
     defaults to 'after'
@@ -193,10 +194,19 @@ jQuery.tree.node = _.dom_node;
   hide_if_empty: hide the label if the value is ""
   remove_if_empty: remove the label if the value is ""
 */  
-      return this.edit_label({
-        label: this.classes_label()
+      var node = this.parent_node(cls);
+      return node.edit_label({
+        label: cls
         ,input: _.classes_input
-      });
+        ,remove_if_empty: true
+        ,do_not_hide_label: true
+      }    
+    }
+  });
+  
+  _.fn.extend({
+    class_list: function() {
+      return this.find('.classes:first');
     }
   });
 })(jQuery);
