@@ -1,0 +1,1 @@
+li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:"<";margin-right:-.3em}li.tree_node .element:after{content:">";margin-left:-.3em}
