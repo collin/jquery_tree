@@ -22,6 +22,10 @@ jQuery.id_input = jQuery("<input type='text'>.id</input>");
 
 jQuery.id_label = jQuery("<div class=\"id\"/>");
 
+jQuery.classes_input = jQuery("<input type='text'>.classes</input>");
+
+jQuery.classes_label = jQuery("<li class=\"classes\"/>");
+
 ;(function(_) {
   var closed_class = 'closed'
     ,open_event = 'expand'
@@ -116,6 +120,13 @@ jQuery.id_label = jQuery("<div class=\"id\"/>");
     _.dom_node.find('.element').append(_.tag_name_label);
   }
   
+  _.tag_name.fn('edit', function() {
+    this.parent_node().edit_label({
+      label: this
+      ,input: this.tag_name_label
+    });
+  });
+  
   _.fn.extend({
     tag_name_label: function() {
       return this.find('label:first');
@@ -123,8 +134,8 @@ jQuery.id_label = jQuery("<div class=\"id\"/>");
     
     ,edit_tag_name: function() {
       return this.edit_label({
-        label: this.tag_label()
-        ,input: _.tag_input
+        label: this.tag_name_label()
+        ,input: _.tag_name_input
         ,default_value: 'div'
       });
     }
@@ -158,6 +169,33 @@ jQuery.tree.node = _.dom_node;
         ,input: _.id_input
         ,hide_if_empty: true
         ,do_not_hide_label: true
+      });
+    }
+  });
+})(jQuery);
+
+
+;(function(_) {
+  _.inject_classes_dom = function() {
+    _.dom_node.find('.element').append(_.classes_label);
+  }
+  
+  _.fn.extend({
+    classes_list: function() {
+      return this.find('.classes:first');
+    }
+    ,edit_classes: function() {
+/*
+  insertion_method: method to insert the input: 'append', 'before', etc.
+    defaults to 'after'
+  do_not_hide_label: keep the label around so it's css will apply
+  default_value: set the label to this if the value is ""
+  hide_if_empty: hide the label if the value is ""
+  remove_if_empty: remove the label if the value is ""
+*/  
+      return this.edit_label({
+        label: this.classes_label()
+        ,input: _.classes_input
       });
     }
   });

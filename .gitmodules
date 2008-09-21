@@ -7,3 +7,6 @@
 [submodule "vendor/jquery_keybinder"]
 	path = vendor/jquery_keybinder
 	url = git://github.com/collin/keybinder.git
+[submodule "vendor/effen"]
+	path = vendor/effen
+	url = git://github.com/nkallen/effen.git
