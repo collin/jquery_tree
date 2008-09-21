@@ -84,10 +84,10 @@
 
 
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{font-size:.7em;font-family:sans-serif}.tree .tree_node.dragging{position:absolute;border:1px outset;background-color:white !important;z-index:10000000000}.tree .tree_node.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .tree_node .toggle{border:none;background:none;width:16px;height:16px;display:inline;float:left;position:relative;top:2px;top:4px}.tree .tree_node .toggle.closed{background-image:url(/icons/open.png)}.tree .tree_node.empty > button.toggle{visibility:hidden}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree ol .inspected{background-color:#fcc}.tree ol .inspected .tree_node{background-color:white}.tree ol li{white-space:nowrap;display:block;clear:both;padding-left:10px;margin-left:0px}.tree.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px}.tree .toggle.closed{background-image:url(/icons/open.png)}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(/icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(/icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(/icons/destroy.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}</style>");
+  jQuery("head").append("<style>.tree{font-size:.7em;font-family:sans-serif}.tree .tree_node.dragging{position:absolute;border:1px outset;background-color:white !important;z-index:10000000000}.tree .tree_node.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .tree_node .toggle{border:none;background:none;width:16px;height:16px;display:inline;float:left;position:relative;top:2px;top:4px}.tree .tree_node .toggle.closed{background-image:url(/icons/open.png)}.tree .tree_node.empty > button.toggle{visibility:hidden}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree ol .inspected{background-color:#fcc}.tree ol .inspected .tree_node{background-color:white}.tree ol li{white-space:nowrap;display:block;clear:both;padding-left:10px;margin-left:0px}.tree.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px}.tree .toggle.closed{background-image:url(/icons/open.png)}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(/icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(/icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(/icons/destroy.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:\"<\";margin-right:-.3em}li.tree_node .element:after{content:\">\";margin-left:-.3em}</style>");
 }));
 
-jQuery.tree_node = jQuery("<li class='tree_node empty'>  <div class='labels'></div>  <ol></ol></li>");
+jQuery.tree_node = jQuery("<li class='tree_node empty'>  <ol></ol></li>");
 
 jQuery.toggle_button = jQuery("<button class='toggle'></button>");
 
@@ -100,6 +100,8 @@ jQuery.tag_name_button = jQuery("<button class='tag_name'></button>");
 jQuery.tag_name_input = jQuery("<input type='text'>.tag_name</input>");
 
 jQuery.tag_name_label = jQuery("<label/>");
+
+jQuery.dom_node = jQuery("<li class='tree_node empty'>  <div class='element'></div>  <ol></ol></li>");
 
 ;(function(_) {
   var closed_class = 'closed'
@@ -192,20 +194,161 @@ jQuery.tag_name_label = jQuery("<label/>");
 
 ;(function(_) {
   _.inject_tag_name_dom = function() {
-    _.tree_node.find('.labels').append(_.tag_name_label);
+    _.dom_node.find('.element').append(_.tag_name_label);
   }
   
   _.fn.extend({
     tag_name_label: function() {
       return this.find('label:first');
     }
+    
+    ,edit_tag_name: function() {
+      return this.edit_label({
+        label: this.tag_label()
+        ,input: _.tag_input
+        ,default_value: 'div'
+      });
+    }
   });
+  
+  _.tag_input
+    .keyup_size_to_fit()
+    .keybind('tab', edit_id)
+    .keybind('shift+3', edit_id)
+    .keybind('space', edit_id)
+    .keybind('shift+tab', edit_classes)
+    .keybind('.', edit_classes)
+    .blur(function(e) {
+        var _this = _(this)
+          ,node = _this.parent_node()
+          ,dom_element = node.dom_element()
+          ,new_el
+          ,tag_name = _this.val();
+        // blur handlers get out of order
+        
+          if(dom_element.length) return dom_element.swap_tag(tag_name);
+          node.create_dom_element(tag_name);
+      })
+    .autocompleteArray(_.elements, {
+        autoFill: true
+        ,delay: 0
+        ,mustMatch: true
+        ,selectFirst: true
+        ,onAutofill: function(input) {
+          input.size_to_fit();
+        }
+      });
+
 })(jQuery);
+
+
+jQuery.tree.node = _.dom_node;
+
+
+// PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
+jQuery.event.trigger = function(type, data, elem, donative, extra) {
+    // Clone the incoming data, if any
+    data = jQuery.makeArray(data);
+
+    if ( type.indexOf("!") >= 0 ) {u
+            type = type.slice(0, -1);
+            var exclusive = true;
+    }
+
+    // Handle a global trigger
+    if ( !elem ) {
+            // Only trigger if we've ever bound an event for it
+            if ( this.global[type] )
+                    jQuery.each( jQuery.cache, function(){
+                            if ( this.events && this.events[type] )
+                                    jQuery.event.trigger( type, data, this.handle.elem );
+                    });
+
+    // Handle triggering a single element
+    } else {
+            // don't do events on text and comment nodes
+            if ( elem.nodeType == 3 || elem.nodeType == 8 )
+                    return undefined;
+
+            var val, ret, fn = jQuery.isFunction( elem[ type ] || null ),
+                    // Check to see if we need to provide a fake event, or not
+                    event = !data[0] || !data[0].preventDefault;
+
+            // Pass along a fake event
+            if ( event ) {
+                    data.unshift({
+                            type: type,
+                            target: elem,
+// PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
+                            _preventDefault: null,
+                            _stopPropagation: null,
+                            preventDefault: function(){ this._preventDefault = true; },
+                            stopPropagation: function(){ this._stopPropagation = true; },
+// END PATCH
+                            timeStamp: now()
+                    });
+                    data[0][expando] = true; // no need to fix fake event
+            }
+
+            // Enforce the right trigger type
+            data[0].type = type;
+            if ( exclusive )
+                    data[0].exclusive = true;
+
+
+            // Trigger the event, it is assumed that "handle" is a function
+            var handle = jQuery.data(elem, "handle");
+// PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
+            if ( handle )  
+            val = handle.apply( elem, data ); 
+ 		             
+            // handle the bubble if need be 
+	          if (data[0]._stopPropagation !== true && val !== false && elem.parentNode)  
+	            jQuery.event.trigger( type, data, elem.parentNode ); 
+	             
+	          if (data[0]._preventDefault === true) donative == false; 
+// END PATCH
+            // Handle triggering native .onfoo handlers (and on links since we don't call .click() for links)
+            if ( (!fn || (jQuery.nodeName(elem, 'a') && type == "click")) && elem["on"+type] && elem["on"+type].apply( elem, data ) === false )
+                    val = false;
+
+            // Extra functions don't get the custom event object
+            if ( event )
+                    data.shift();
+
+            // Handle triggering of extra function
+            if ( extra && jQuery.isFunction( extra ) ) {
+                    // call the extra function and tack the current return value on the end for possible inspection
+                    ret = extra.apply( elem, val == null ? data : data.concat( val ) );
+                    // if anything is returned, give it precedence and have it overwrite the previous value
+                    if (ret !== undefined)
+                            val = ret;
+            }
+
+            // Trigger the native events (except for clicks on links)
+            if ( fn && donative !== false && val !== false && !(jQuery.nodeName(elem, 'a') && type == "click") ) {
+                    this.triggered = true;
+                    try {
+                            elem[ type ]();
+                    // prevent IE from throwing an error for some hidden elements
+                    } catch (e) {}
+            }
+
+            this.triggered = false;
+    }
+
+    return val;
+}
+
 
 
 ;(function(_){
   _.tree = {
     button_plugins: []
+    
+    ,label_plugins: []    
+    
+    ,node: _.tree_node
     
     ,use_button_plugins: function(names) {
       _(names.split(/ |,/)).each(function() {
