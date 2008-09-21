@@ -1,0 +1,90 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+
+raise "YOU NEED A GEM: gem install collin-continuous_builder" unless require 'continuous_builder'
+raise "YOU NEED A GEM: gem install haml" unless require 'haml'
+
+require 'sass'
+require 'sass/plugin'
+#require 'jabs'
+
+require 'pathname'
+Pathname.send :alias_method, '/', '+'
+
+module JQuery
+  module Tree
+    Version = "0.0.1"
+    UriRoot = ""
+    Root = Pathname.new(Pathname(__FILE__).dirname)/'..'
+    class Builder < ContinuousBuilder
+      watches :haml,
+        :files => Root/'lib'/'**'/'*.html.haml',
+        :module => Haml
+           
+      watches :sass,
+        :files => Root/'lib'/'**'/'*.css.sass',
+        :module => Sass,
+        :style => :compressed
+        
+      watches :resources,
+        :files => Root/'lib'/'**'/'*{.css,.js,.html}',
+        :update => :build_embedded,
+        :wait_for_all_edits => true
+      
+      def build_embedded path
+        scripts = []
+        
+        stylesheets = Pathname.glob(Root/'lib'/'**'/'*.css').map do |sheet|
+          flat = sheet.read
+          flat.gsub!("\n", "")
+          flat.gsub!("\r\n", "")
+          flat.gsub! /\/\*.*\*\//, "" 
+          flat.gsub! /\"/ , "\\\""
+          flat
+        end.join('')
+        
+        style_el = "<style>#{stylesheets}</style>"
+        
+        scripts << StringIO.new(%{;(jQuery(function() {
+  jQuery("head").append("#{style_el}");
+}));})
+
+        
+        Pathname.glob(Root/'lib'/'**'/'*.html').each do |script|
+          flat = script.read
+          flat.gsub! "\r\n", ""
+          flat.gsub! "\n", ""
+          flat.gsub! /\/\*.*\*\//, "" 
+          flat.gsub! /\"/ , "\\\""
+          name = script.basename.to_s.gsub('.html', '')
+          jquery = "jQuery.#{name} = jQuery(\"#{flat}\");"       
+          io = StringIO.new jquery
+          scripts << io
+        end 
+        
+        Pathname.glob(Root/'lib'/'**'/'*.js').each do |script|
+          scripts << script
+        end
+        
+        vendor = Pathname.glob(Root/'vendor'/'**'/'*.js')
+        
+        f = File.open(Root/'pkg'/"jquery.tree-#{Version}.js", 'w+')
+        f.write(scripts_string = scripts.map{|script| script.read}.join("\n\n"))
+        f.close()
+        
+        f = File.open(Root/'pkg'/"jquery.tree.vendor_bundle-#{Version}.js", 'w+')
+        f.write(vendor_string = vendor.map{|script| script.read}.join("\n\n"))
+        f.close()
+        
+        f = File.open(Root/'pkg'/"jquery.tree.bundle-#{Version}.js", 'w+')
+        f.write "#{vendor_string}\n\n#{scripts_string}"
+        f.close()
+        
+      end
+    end
+  end
+end
+
+builder = JQuery::Tree::Builder.new
+builder.build_all
+builder.build_continuously

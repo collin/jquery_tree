@@ -1,0 +1,3 @@
+[submodule "vendor/jquery_extensions"]
+	path = vendor/jquery_extensions
+	url = git://github.com/collin/jquery_extensions.git

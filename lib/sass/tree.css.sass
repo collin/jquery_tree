@@ -1,0 +1,46 @@
+.tree
+  :font
+    :size .7em
+    :family sans-serif
+    
+  .tree_node
+    &.dragging
+      :position absolute
+      :border 1px outset
+      :background-color white !important
+      :z-index 10000000000
+      
+    &.inspected
+      &> button.toggle
+        :background-image url(#{JQuery::Tree::UriRoot}/icons/close.png)
+
+    .toggle
+      :border none
+      :background none
+      :width 16px
+      :height 16px
+      :display inline
+      :float left
+      :position relative
+      :top 2px
+      :top 4px
+      &.closed
+        :background-image url(#{JQuery::Tree::UriRoot}/icons/open.png)
+    &.empty > button.toggle
+      :visibility hidden
+  ol, ul
+    :list-style none
+  ol
+    :white-space nowrap
+    :background-color white
+    :padding 0
+    .inspected
+      :background-color #fcc
+      .tree_node
+        :background-color white
+    li
+      :white-space nowrap
+      :display block
+      :clear both
+      :padding-left 10px
+      :margin-left 0px
