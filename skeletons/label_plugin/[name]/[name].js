@@ -1,6 +1,6 @@
 ;(function(_) {
   _.inject_<%= name %>_dom = function() {
-    _.tree_node.find('.labels').append(_.<%= name %>);
+    _.tree_node.find('.labels').append(_.<%= name %>_label);
   }
   
   _.fn.extend({

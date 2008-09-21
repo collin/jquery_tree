@@ -10,6 +10,12 @@ jQuery.disable_button = jQuery("<button class='disable'></button>");
 
 jQuery.destroy_button = jQuery("<button class='destroy'></button>");
 
+jQuery.tag_name_button = jQuery("<button class='tag_name'></button>");
+
+jQuery.tag_name_input = jQuery("<input type='text'>.tag_name</input>");
+
+jQuery.tag_name_label = jQuery("<label/>");
+
 ;(function(_) {
   var closed_class = 'closed'
     ,open_event = 'expand'
@@ -94,6 +100,19 @@ jQuery.destroy_button = jQuery("<button class='destroy'></button>");
     ,destroy_click: function(el, node) {
       node.trigger(destroy_event);
       node.remove();
+    }
+  });
+})(jQuery);
+
+
+;(function(_) {
+  _.inject_tag_name_dom = function() {
+    _.tree_node.find('.labels').append(_.tag_name_label);
+  }
+  
+  _.fn.extend({
+    tag_name_label: function() {
+      return this.find('label:first');
     }
   });
 })(jQuery);
