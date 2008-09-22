@@ -4,7 +4,8 @@
     _(document.body).append(_.<%= name %>_input);
   }
     
-  _.<%= name %>_label.fn('edit', function() {
+  _.<%= name %>_label.fn({ 
+    edit: function() {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
     defaults to 'after'
@@ -13,11 +14,12 @@
   hide_if_empty: hide the label if the value is ""
   remove_if_empty: remove the label if the value is ""
 */  
-    var node = this.parent_node();
-    return node.edit_label({
-      label: node.<%= name %>_label()
-      ,input: _.<%= name %>_input
-    });
+      var node = this.parent_node();
+      return node.edit_label({
+        label: node.<%= name %>_label()
+        ,input: _.<%= name %>_input
+      });
+    }
   });
   
   _.fn.extend({

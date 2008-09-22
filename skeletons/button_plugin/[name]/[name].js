@@ -1,6 +1,6 @@
 ;(function(_) {
   _.inject_<%= name %>_dom = function() {
-    _.tree_node.prepend(_.<%= name %>_button]);
+    _.tree_node.prepend(_.<%= name %>_button);
   }
   
   _.fn.extend({

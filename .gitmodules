@@ -9,4 +9,4 @@
 	url = git://github.com/collin/keybinder.git
 [submodule "vendor/effen"]
 	path = vendor/effen
-	url = git://github.com/nkallen/effen.git
+	url = git://github.com/collin/effen.git

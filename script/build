@@ -17,6 +17,10 @@ module JQuery
     UriRoot = ""
     Root = Pathname.new(Pathname(__FILE__).dirname)/'..'
     class Builder < ContinuousBuilder
+      watches :examples,
+        :files => Root/'examples'/'**'/'*.html.haml',
+        :module => Haml
+        
       watches :haml,
         :files => Root/'lib'/'**'/'*.html.haml',
         :module => Haml
@@ -63,21 +67,28 @@ module JQuery
           scripts << io
         end 
         
+        scripts << StringIO.new("if(!jQuery.tree) jQuery.tree = {};")
+        
         Pathname.glob(Root/'lib'/'**'/'*.js').each do |script|
           scripts << script
         end
         
         vendor = []
+        vendor << Root/'vendor'/'jquery'/'jquery-1.2.6.js'
         vendor << Root/'vendor'/'effen'/'jquery.fn.js'
         vendor << Root/'vendor'/'jquery_extensions'/'jquery.extension.js'
         vendor << Root/'vendor'/'jquery_keybinder'/'jquery.keybinder.js'
         
         f = File.open(Root/'pkg'/"jquery.tree-#{Version}.js", 'w+')
-        f.write(scripts_string = scripts.map{|script| script.read}.join("\n\n"))
+        f.write(scripts_string = scripts.map do |script| 
+          (script.is_a?(StringIO) ? "" : "console.log('#{script}');\n")+script.read
+        end.join("\n\n"))
         f.close()
         
         f = File.open(Root/'pkg'/"jquery.tree.vendor_bundle-#{Version}.js", 'w+')
-        f.write(vendor_string = vendor.map{|script| script.read}.join("\n\n"))
+        f.write(vendor_string = vendor.map do |script| 
+          "console.log('#{script}');\n"+script.read
+        end.join("\n\n"))
         f.close()
         
         f = File.open(Root/'pkg'/"jquery.tree.bundle-#{Version}.js", 'w+')

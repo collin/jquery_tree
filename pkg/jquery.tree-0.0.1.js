@@ -30,6 +30,9 @@ jQuery.attributes_input = jQuery("<input type='text'>.attributes</input>");
 
 jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></dl>");
 
+if(!jQuery.tree) jQuery.tree = {};
+
+console.log('lib/plugins/toggle/toggle.js');
 ;(function(_) {
   var closed_class = 'closed'
     ,open_event = 'expand'
@@ -51,7 +54,7 @@ jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></
         node.expand_children(_.tree.animate);
       }
       else
-        node.trigger(collapse event);
+        node.trigger(collapse_event);
         node.collapse_children(_.tree.animate);
     }
 
@@ -76,13 +79,14 @@ jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></
 })(jQuery);
 
 
+console.log('lib/plugins/disable/disable.js');
 ;(function(_) {
   var active_class = 'active'
     ,disable_event = 'disable'
     ,enable_event = 'enable';
   
   _.inject_disable_dom = function() {
-    _.tree_node.prepend(_.disable_button]);
+    _.tree_node.prepend(_.disable_button);
   }
   
   _.fn.extend({
@@ -92,18 +96,19 @@ jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></
     
     ,disable_click: function(el, node) {
       el.toggleClass(active_class);
-      if(el.hasClass(active_class) node.trigger(disable_event);
-      else                    node.trigger(enable_event);    
+      if(el.hasClass(active_class)) node.trigger(disable_event);
+      else                     node.trigger(enable_event);    
     }
   });
 })(jQuery);
 
 
+console.log('lib/plugins/destroy/destroy.js');
 ;(function(_) {
   var destroy_event = 'destroy'
 
   _.inject_destroy_dom = function() {
-    _.tree_node.prepend(_.destroy_button]);
+    _.tree_node.prepend(_.destroy_button);
   }
   
   _.fn.extend({
@@ -119,19 +124,22 @@ jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></
 })(jQuery);
 
 
+console.log('lib/plugins/tag_name/tag_name.js');
 ;(function(_) {
   _.inject_tag_name_dom = function() {
     _.dom_node.find('.element').append(_.tag_name_label);
     _(document.body).append(_.tag_name_input);
   }
   
-  _.tag_name_label.fn('edit', function() {
-    var node = parent_node();
-    return node.edit_label({
-      label: node.tag_name_label()
-      ,input: _.tag_name_input
-      ,default_value: 'div'
-    });
+  _.tag_name_label.fn({
+    edit: function() {
+      var node = parent_node();
+      return node.edit_label({
+        label: node.tag_name_label()
+        ,input: _.tag_name_input
+        ,default_value: 'div'
+      });
+    }
   });
   
   _.fn.extend({
@@ -142,15 +150,18 @@ jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></
 })(jQuery);
 
 
-jQuery.tree.node = _.dom_node;
+console.log('lib/plugins/dom_node/dom_node.js');
+jQuery.tree.node = jQuery.dom_node;
 
 
+console.log('lib/plugins/id/id.js');
 ;(function(_) {
   _.inject_id_dom = function() {
     _.dom_node.find('.element').append(_.id_label);
   }
 
-  _.id_label.fn('edit', {function() {
+  _.id_label.fn({
+    edit: function() {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
     defaults to 'after'
@@ -159,13 +170,14 @@ jQuery.tree.node = _.dom_node;
   hide_if_empty: hide the label if the value is ""
   remove_if_empty: remove the label if the value is ""
 */  
-    var node = this.parent_node();"
-    return node.edit_label({
-      label: node.id_label()
-      ,input: _.id_input
-      ,hide_if_empty: true
-      ,do_not_hide_label: true
-    });
+      var node = this.parent_node();
+      return node.edit_label({
+        label: node.id_label()
+        ,input: _.id_input
+        ,hide_if_empty: true
+        ,do_not_hide_label: true
+      });
+    }
   });
   
   _.fn.extend({
@@ -176,6 +188,7 @@ jQuery.tree.node = _.dom_node;
 })(jQuery);
 
 
+console.log('lib/plugins/classes/classes.js');
 ;(function(_) {
   _.inject_classes_dom = function() {
     _.dom_node.find('.element').append(_.classes_label);
@@ -185,7 +198,7 @@ jQuery.tree.node = _.dom_node;
     edit: function(last) {
       if(last) {
         var last_class = this.last_class();
-        if last_class.length return this.edit_class(last_class);
+        if(last_class.length) return this.edit_class(last_class);
       }
       else {
         var first_class = this.first_class();
@@ -215,7 +228,7 @@ jQuery.tree.node = _.dom_node;
         ,input: _.classes_input
         ,remove_if_empty: true
         ,do_not_hide_label: true
-      }    
+      });    
     }
   
     ,new_class: function() {
@@ -264,18 +277,21 @@ jQuery.tree.node = _.dom_node;
 })(jQuery);
 
 
+console.log('lib/plugins/attributes/attributes.js');
 ;(function(_) {
   _.inject_attributes_dom = function() {
     _.dom_node.find('.element').append(_.attributes_label);
     _(document.body).append(_.attributes_input);
   }
     
-  _.tag_name_label.fn('edit', function() {
-    var first_attr = this.attribute_list().find('li:first');
-    
-    if(first_attr.length) return this.edit_attr(first_attr);
-    
-    return this.new_attr();  
+  _.tag_name_label.fn({
+    edit: function() {
+      var first_attr = this.attribute_list().find('li:first');
+      
+      if(first_attr.length) return this.edit_attr(first_attr);
+      
+      return this.new_attr();  
+    }
   });
   
   _.fn.extend({
@@ -334,12 +350,18 @@ jQuery.tree.node = _.dom_node;
 })(jQuery);
 
 
+console.log('lib/bubble_custom_event.js');
 // PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
+;(function() {
+
+function now() { return +new Date; }
+var expando = "jQuery" + now();
+
 jQuery.event.trigger = function(type, data, elem, donative, extra) {
     // Clone the incoming data, if any
     data = jQuery.makeArray(data);
 
-    if ( type.indexOf("!") >= 0 ) {u
+    if ( type.indexOf("!") >= 0 ) {
             type = type.slice(0, -1);
             var exclusive = true;
     }
@@ -374,7 +396,7 @@ jQuery.event.trigger = function(type, data, elem, donative, extra) {
                             preventDefault: function(){ this._preventDefault = true; },
                             stopPropagation: function(){ this._stopPropagation = true; },
 // END PATCH
-                            timeStamp: now()
+// Doesn't work             timeStamp: now()
                     });
                     data[0][expando] = true; // no need to fix fake event
             }
@@ -427,12 +449,20 @@ jQuery.event.trigger = function(type, data, elem, donative, extra) {
     }
 
     return val;
-}
+};
+})();
+console.warn('PATCHED bubble custom event')
 
 
-
+console.log('lib/tree.js');
 ;(function(_){
-  _.tree = {
+  _.tree_node.fn({
+    paint: function(label) {
+      return _(this).prepend(label);
+    }
+  });
+
+  _.extend(_.tree, {
     button_plugins: []
     
     ,label_plugins: []    
@@ -441,11 +471,18 @@ jQuery.event.trigger = function(type, data, elem, donative, extra) {
     
     ,use_button_plugins: function(names) {
       _(names.split(/ |,/)).each(function() {
-        _.button_plugins.push(this);
-        _["inject_"+this+"_dom]"();
+        _.tree.button_plugins.push(this);
+        _["inject_"+this+"_dom"]();
       });
     }
-  };
+    
+    ,use_label_plugins: function(names) {
+      _(names.split(/ |,/)).each(function() {
+        _.tree.label_plugins.push(this);
+        _["inject_"+this+"_dom"]();
+      });
+    }
+  });
 
   _.fn.extend({
     child_list: function() {
@@ -469,7 +506,7 @@ jQuery.event.trigger = function(type, data, elem, donative, extra) {
         _.tree.button_plugins.each(function() {
           if(el.hasClass(this)) el[this+'_click'](el, node);
         });
-      }        
+      });        
     }
 /*
   label: the jqueried label
@@ -527,6 +564,27 @@ jQuery.event.trigger = function(type, data, elem, donative, extra) {
       
       setTimeout(function(){input.focus();}, 1);
       return this;
+    }
+    
+    // assumes effen
+    ,deep_clone: function(events) {
+      var clone = this.clone(events)
+        .mixin(this)
+        .clear();
+        
+      this.children().each(function() {
+        clone.append(_(this).deep_clone(events));
+      });
+      
+      return clone;
+    }
+    
+    ,create_node: function(contents) {
+      var node = _.tree.node.deep_clone();
+      node.fn('paint', contents);
+      this.removeClass('empty');
+      this.child_list().append(node);
+      return node;
     }
   });
 })(jQuery);
