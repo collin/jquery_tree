@@ -92,7 +92,8 @@
 
     ,blank: function() {
       return this.text().match(/^\s*$/);
-    }  
+    }
+  
     ,remove_if_empty: function() {
       return this.if_empty(function() {this.remove();});
     }
@@ -245,7 +246,7 @@
 
 
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{font-size:.7em;font-family:sans-serif}.tree .tree_node.dragging{position:absolute;border:1px outset;background-color:white !important;z-index:10000000000}.tree .tree_node.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .tree_node .toggle{border:none;background:none;width:16px;height:16px;display:inline;float:left;position:relative;top:2px;top:4px}.tree .tree_node .toggle.closed{background-image:url(/icons/open.png)}.tree .tree_node.empty > button.toggle{visibility:hidden}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree ol .inspected{background-color:#fcc}.tree ol .inspected .tree_node{background-color:white}.tree ol li{white-space:nowrap;display:block;clear:both;padding-left:10px;margin-left:0px}.tree.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px}.tree .toggle.closed{background-image:url(/icons/open.png)}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(/icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(/icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(/icons/destroy.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:\"<\";margin-right:-.3em}li.tree_node .element:after{content:\">\";margin-left:-.3em}li.tree_node .id{display:inline;color:red;margin-left:-.3em}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}</style>");
+  jQuery("head").append("<style>.tree{font-size:.7em;font-family:sans-serif}.tree .tree_node.dragging{position:absolute;border:1px outset;background-color:white !important;z-index:10000000000}.tree .tree_node.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .tree_node .toggle{border:none;background:none;width:16px;height:16px;display:inline;float:left;position:relative;top:2px;top:4px}.tree .tree_node .toggle.closed{background-image:url(/icons/open.png)}.tree .tree_node.empty > button.toggle{visibility:hidden}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree ol .inspected{background-color:#fcc}.tree ol .inspected .tree_node{background-color:white}.tree ol li{white-space:nowrap;display:block;clear:both;padding-left:10px;margin-left:0px}.tree.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px}.tree .toggle.closed{background-image:url(/icons/open.png)}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(/icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(/icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(/icons/destroy.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:\"<\";margin-right:-.3em}li.tree_node .element:after{content:\">\";margin-left:-.3em}li.tree_node .id{display:inline;color:red;margin-left:-.3em}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
 }));
 
 jQuery.tree_node = jQuery("<li class='tree_node empty'>  <ol></ol></li>");
@@ -271,6 +272,10 @@ jQuery.id_label = jQuery("<div class=\"id\"/>");
 jQuery.classes_input = jQuery("<input type='text'>.classes</input>");
 
 jQuery.classes_label = jQuery("<li class=\"classes\"/>");
+
+jQuery.attributes_input = jQuery("<input type='text'>.attributes</input>");
+
+jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></dl>");
 
 ;(function(_) {
   var closed_class = 'closed'
@@ -424,9 +429,15 @@ jQuery.tree.node = _.dom_node;
   }
 
   _.classes_label.fn({
-    edit: function() {
-      var first_class = this.class_list().find('li:first');
-      if(first_class.length) return this.edit_class(first_class);
+    edit: function(last) {
+      if(last) {
+        var last_class = this.last_class();
+        if last_class.length return this.edit_class(last_class);
+      }
+      else {
+        var first_class = this.first_class();
+        if(first_class.length) return this.edit_class(first_class);
+      }      
       return this.new_class();    
     }
   });
@@ -487,6 +498,84 @@ jQuery.tree.node = _.dom_node;
       }).join('');
       var dom = _(dom_string);
       return dom[0] === document ? null : dom;
+    }
+  
+    ,last_class: function() {
+      return this.class_list().find('li:last');
+    }
+    
+    ,first_class: function() {
+      return class_list().find('li:last');
+    }
+  });
+})(jQuery);
+
+
+;(function(_) {
+  _.inject_attributes_dom = function() {
+    _.dom_node.find('.element').append(_.attributes_label);
+    _(document.body).append(_.attributes_input);
+  }
+    
+  _.tag_name_label.fn('edit', function() {
+    var first_attr = this.attribute_list().find('li:first');
+    
+    if(first_attr.length) return this.edit_attr(first_attr);
+    
+    return this.new_attr();  
+  });
+  
+  _.fn.extend({
+    attribute_list: function() {
+      return this.find('.attributes:first');
+    }
+    
+    ,new_attr: function() {
+      var attr = _('<li><dt><dd></li>');
+      this.attribute_list().append(attr);
+      return this.edit_attr(attr);
+    }
+    
+    ,previous_attr: function(attr) {
+      var prev = attr.prev('li');
+      if(prev.length) return this.edit_value(prev);
+      this.prev().fn('edit', 'last');
+    }
+    
+    ,next_attr: function(attr) {
+      var next = attr.next('li');
+      if(next.length) return this.edit_attr(next);
+      return this.parent_node().new_attr();
+    }
+    
+    ,edit_attr: function(label) {
+      return this.edit_label({
+        label: label.find('dt')
+        ,input: _.attr_input
+        ,insertion_method: 'before'
+        ,if_empty: function() {this.parent().remove()}
+        ,do_not_hide_label: true
+      });
+    }
+    
+    ,edit_value: function(label) {
+      return this.edit_label({
+        label: label.find('dd')
+        ,input: _.value_input
+        ,insertion_method: 'append'
+        ,do_not_hide_label: true
+      });
+    }    
+    
+    ,attributes_to_dom: function() {
+      var dom_string = _(this[0].attributes).map(function(which, attr) {
+        if(!this.name.match(/id|class/)) {
+          return '<li><dt>'+attr.name+'</dt><dd>'+attr.value+'</dd></li>';
+        }
+      }).join('');
+      
+      var dom = _(dom_string);
+      return dom[0] === document ? null : dom; 
     }
   });
 })(jQuery);

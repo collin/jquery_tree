@@ -1,0 +1,1 @@
+li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:"=";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'"';color:black}

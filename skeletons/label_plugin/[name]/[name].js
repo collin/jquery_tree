@@ -4,7 +4,7 @@
     _(document.body).append(_.<%= name %>_input);
   }
     
-  _.tag_name_label.fn('edit', function() {
+  _.<%= name %>_label.fn('edit', function() {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
     defaults to 'after'
