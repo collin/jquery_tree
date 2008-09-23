@@ -3826,21 +3826,21 @@ jQuery.destroy_button = jQuery("<button class='destroy'></button>");
 
 jQuery.tag_name_button = jQuery("<button class='tag_name'></button>");
 
-jQuery.tag_name_input = jQuery("<input type='text'>.tag_name</input>");
+jQuery.tag_name_input = jQuery("<input class='tag_name' type='text' />");
 
 jQuery.tag_name_label = jQuery("<label/>");
 
 jQuery.dom_node = jQuery("<li class='tree_node empty'>  <div class='element'></div>  <ol></ol></li>");
 
-jQuery.id_input = jQuery("<input type='text'>.id</input>");
+jQuery.id_input = jQuery("<input class='id' type='text' />");
 
 jQuery.id_label = jQuery("<div class=\"id\"/>");
 
-jQuery.classes_input = jQuery("<input type='text'>.classes</input>");
+jQuery.classes_input = jQuery("<input class='classes' type='text' />");
 
 jQuery.classes_label = jQuery("<li class=\"classes\"/>");
 
-jQuery.attributes_input = jQuery("<input type='text'>.attributes</input>");
+jQuery.attributes_input = jQuery("<input class='attributes' type='text' />");
 
 jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></dl>");
 
