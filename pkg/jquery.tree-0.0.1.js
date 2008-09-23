@@ -1,8 +1,8 @@
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{font-size:.7em;font-family:sans-serif}.tree .tree_node.dragging{position:absolute;border:1px outset;background-color:white !important;z-index:10000000000}.tree .tree_node.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .tree_node .toggle{border:none;background:none;width:16px;height:16px;display:inline;float:left;position:relative;top:2px;top:4px}.tree .tree_node .toggle.closed{background-image:url(/icons/open.png)}.tree .tree_node.empty > button.toggle{visibility:hidden}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree ol .inspected{background-color:#fcc}.tree ol .inspected .tree_node{background-color:white}.tree ol li{white-space:nowrap;display:block;clear:both;padding-left:10px;margin-left:0px}.tree.inspected> button.toggle{background-image:url(/icons/close.png)}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px}.tree .toggle.closed{background-image:url(/icons/open.png)}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(/icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(/icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(/icons/destroy.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:\"<\";margin-right:-.3em}li.tree_node .element:after{content:\">\";margin-left:-.3em}li.tree_node .id{display:inline;color:red;margin-left:-.3em}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
+  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:.7em;font-family:sans-serif}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(/icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(/icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(/icons/destroy.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:\"<\";margin-right:-.3em}li.tree_node .element:after{content:\">\";margin-left:-.3em}li.tree_node .id{display:inline;color:red;margin-left:-.3em}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
 }));
 
-jQuery.tree_node = jQuery("<li class='tree_node empty'>  <ol></ol></li>");
+jQuery.tree_node = jQuery("<li class='tree_node empty'>  <span></span>  <ol></ol></li>");
 
 jQuery.toggle_button = jQuery("<button class='toggle'></button>");
 
@@ -35,8 +35,8 @@ if(!jQuery.tree) jQuery.tree = {};
 console.log('lib/plugins/toggle/toggle.js');
 ;(function(_) {
   var closed_class = 'closed'
-    ,open_event = 'expand'
-    ,close_event = 'collapse';
+    ,expand_event = 'expand'
+    ,collapse_event = 'collapse';
   _.tree.animate = true;
   
   _.inject_toggle_dom = function() {
@@ -53,9 +53,10 @@ console.log('lib/plugins/toggle/toggle.js');
         node.trigger(expand_event);
         node.expand_children(_.tree.animate);
       }
-      else
+      else {
         node.trigger(collapse_event);
         node.collapse_children(_.tree.animate);
+      }
     }
 
     ,collapse_children: function(slide) {
@@ -350,6 +351,152 @@ console.log('lib/plugins/attributes/attributes.js');
 })(jQuery);
 
 
+console.log('lib/tree.js');
+;(function(_){
+  _.tree_node.fn({
+    paint: function(label) {
+      return _(this).find('span:first').html(label);
+    }
+  });
+
+  _.extend(_.tree, {
+    button_plugins: []
+    
+    ,label_plugins: []    
+    
+    ,node: _.tree_node
+    
+    ,use_button_plugins: function(names) {
+      _(names.split(/ |,/)).each(function() {
+        _.tree.button_plugins.push(this);
+        _["inject_"+this+"_dom"]();
+      });
+    }
+    
+    ,use_label_plugins: function(names) {
+      _(names.split(/ |,/)).each(function() {
+        _.tree.label_plugins.push(this);
+        _["inject_"+this+"_dom"]();
+      });
+    }
+  });
+
+  var inspection_class = 'inspected';
+
+  _.fn.extend({
+    child_list: function() {
+      if(this.is('ol')) return this;
+      return this.find('ol:first');
+    }
+    
+    ,parent_node: function() {
+      var node = this.parents('.tree_node:first');
+      if(node.length) return node;
+      return this.filter('.tree_node');
+    }
+    
+    ,is_tree: function() {
+      var tree = this;
+      return this
+        .click(function(e) {
+            var el = _(e.target)
+              ,node = el.parent_node();
+            
+            if(el.is('input')) return;
+            node.blur_all();
+            _(_.tree.button_plugins).each(function() {
+              if(el.hasClass(this)) el[this+'_click'](el, node);
+            });
+          })
+        .mouseover(function(e) {
+            var node = _(e.target);
+            tree.remove_class_on_all_children_and_self(inspection_class)
+            if(!node.is('.tree_node')) node = node.parent_node();
+            node.addClass(inspection_class);      
+          });        
+    }
+/*
+  label: the jqueried label
+  input: the jqueried input elment
+
+  insertion_method: method to insert the input: 'append', 'before', etc.
+    defaults to 'after'
+  do_not_hide_label: keep the label around so it's css will apply
+  default_value: set the label to this if the value is ""
+  hide_if_empty: hide the label if the value is ""
+  remove_if_empty: remove the label if the value is ""
+*/
+    ,edit_label: function(opts) {
+      var label = opts.label
+        ,input = opts.input;
+
+      _(document.body).blur_all();
+      input.val(label.text());
+      
+      if(opts.do_not_hide_label) label.clear().css('display', '');
+      else label.hide();
+      
+      label[opts.insertion_method || 'after'](input.show());
+     
+      input
+        .size_to_fit()
+        .one('blur', function() {
+          _(document.body).append(input.hide());
+          if(opts.default_value) {
+            label
+              .html(input.val() || opts.default_value)
+              .show();
+          }
+          else if(opts.hide_if_empty) {      
+            label
+              .html(input.val())
+              .hide_if_empty();
+          }
+          else if(opts.remove_if_empty) {
+            label
+              .html(input.val())
+              .remove_if_empty();
+          }
+          else if(opts.if_empty) {
+            label
+              .html(input.val())
+              .if_empty(opts.if_empty);
+          }
+          else {
+            label.html(input.val());
+          }
+        });
+      
+      label.parent().length && opts.success && opts.success.call(label);
+      
+      setTimeout(function(){input.focus();}, 1);
+      return this;
+    }
+    
+    // assumes effen
+    ,deep_clone: function(events) {
+      var clone = this.clone(events)
+        .mixin(this)
+        .clear();
+        
+      this.children().each(function() {
+        clone.append(_(this).deep_clone(events));
+      });
+      
+      return clone;
+    }
+    
+    ,create_node: function(contents) {
+      var node = _.tree.node.deep_clone();
+      node.fn('paint', contents);
+      this.removeClass('empty');
+      this.child_list().append(node);
+      return node;
+    }
+  });
+})(jQuery);
+
+
 console.log('lib/bubble_custom_event.js');
 // PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
 ;(function() {
@@ -452,139 +599,3 @@ jQuery.event.trigger = function(type, data, elem, donative, extra) {
 };
 })();
 console.warn('PATCHED bubble custom event')
-
-
-console.log('lib/tree.js');
-;(function(_){
-  _.tree_node.fn({
-    paint: function(label) {
-      return _(this).prepend(label);
-    }
-  });
-
-  _.extend(_.tree, {
-    button_plugins: []
-    
-    ,label_plugins: []    
-    
-    ,node: _.tree_node
-    
-    ,use_button_plugins: function(names) {
-      _(names.split(/ |,/)).each(function() {
-        _.tree.button_plugins.push(this);
-        _["inject_"+this+"_dom"]();
-      });
-    }
-    
-    ,use_label_plugins: function(names) {
-      _(names.split(/ |,/)).each(function() {
-        _.tree.label_plugins.push(this);
-        _["inject_"+this+"_dom"]();
-      });
-    }
-  });
-
-  _.fn.extend({
-    child_list: function() {
-      if(this.is('ol')) return this;
-      return this.find('ol:first');
-    }
-    
-    ,parent_node: function() {
-      var node = this.parents('.tree_node:first');
-      if(node.length) return node;
-      return this.filter('.tree_node');
-    }
-    
-    ,is_tree: function() {
-      return this.click(function(e) {
-        var el = _(e.target)
-          ,node = el.parent_node();
-        
-        if(el.is('input')) return;
-        node.blur_all();
-        _.tree.button_plugins.each(function() {
-          if(el.hasClass(this)) el[this+'_click'](el, node);
-        });
-      });        
-    }
-/*
-  label: the jqueried label
-  input: the jqueried input elment
-
-  insertion_method: method to insert the input: 'append', 'before', etc.
-    defaults to 'after'
-  do_not_hide_label: keep the label around so it's css will apply
-  default_value: set the label to this if the value is ""
-  hide_if_empty: hide the label if the value is ""
-  remove_if_empty: remove the label if the value is ""
-*/
-    ,edit_label: function(opts) {
-      var label = opts.label
-        ,input = opts.input;
-
-      _(document.body).blur_all();
-      input.val(label.text());
-      
-      if(opts.do_not_hide_label) label.clear().css('display', '');
-      else label.hide();
-      
-      label[opts.insertion_method || 'after'](input.show());
-     
-      input
-        .size_to_fit()
-        .one('blur', function() {
-          _(document.body).append(input.hide());
-          if(opts.default_value) {
-            label
-              .html(input.val() || opts.default_value)
-              .show();
-          }
-          else if(opts.hide_if_empty) {      
-            label
-              .html(input.val())
-              .hide_if_empty();
-          }
-          else if(opts.remove_if_empty) {
-            label
-              .html(input.val())
-              .remove_if_empty();
-          }
-          else if(opts.if_empty) {
-            label
-              .html(input.val())
-              .if_empty(opts.if_empty);
-          }
-          else {
-            label.html(input.val());
-          }
-        });
-      
-      label.parent().length && opts.success && opts.success.call(label);
-      
-      setTimeout(function(){input.focus();}, 1);
-      return this;
-    }
-    
-    // assumes effen
-    ,deep_clone: function(events) {
-      var clone = this.clone(events)
-        .mixin(this)
-        .clear();
-        
-      this.children().each(function() {
-        clone.append(_(this).deep_clone(events));
-      });
-      
-      return clone;
-    }
-    
-    ,create_node: function(contents) {
-      var node = _.tree.node.deep_clone();
-      node.fn('paint', contents);
-      this.removeClass('empty');
-      this.child_list().append(node);
-      return node;
-    }
-  });
-})(jQuery);

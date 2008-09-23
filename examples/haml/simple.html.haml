@@ -7,7 +7,7 @@
         _(function() {
           // BAD BAD Javascript example, don't forget your "var"
           // Or I'll hurt you.
-          tree = _('#tree');
+          tree = _('#tree').is_tree();;
           
           awesome = tree.create_node('Awesome');
           
@@ -24,4 +24,4 @@
         });
       })(jQuery)
   %body
-    %ol#tree
+    %ol#tree.tree
