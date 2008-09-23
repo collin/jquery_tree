@@ -23,6 +23,20 @@
             subset = set.create_node('Subset');
             subset.create_node('Other Things');
             subset.create_node('Fun Times');
+            
+            function notify(msg) {
+              return function(e) {
+                console.log(msg, e.target);
+              };
+            }
+            
+            tree.bind('expand', notify('expand'));
+            tree.bind('collapse', notify('collapse'));
+            
+            tree.bind('disable', notify('disable'));
+            tree.bind('enable', notify('enable'));
+            
+            tree.bind('destroy', notify('destroy'));
           });
         })(jQuery)
       //]]>
