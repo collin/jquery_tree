@@ -1,3 +1,16 @@
 @import label_plugin.sass
 li.tree_node
-  
+  .classes
+    :display inline
+    :padding 0
+    :margin 0 
+    li
+      :padding 0
+      :margin 0
+      :background transparent
+      :display inline
+      :color green
+      &:before
+        :content "."
+        :color black
+        :font-weight bold 

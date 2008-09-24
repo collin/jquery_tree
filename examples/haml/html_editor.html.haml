@@ -12,18 +12,18 @@
           _.tree.node = _.dom_node; 
           tree = _('#tree').is_tree();
           
-          awesome = tree.create_node('Awesome');
+          awesome = tree.create_node();
           
-          awesome.create_node('Cake');
-          awesome.create_node('Bacon');
-          awesome.create_node('jQuery');
+          awesome.create_node({attributes: {ok:'awesome',green:'machine'}});
+          awesome.create_node();
+          awesome.create_node();
           
-          set = tree.create_node('Set');
-          set.create_node('Things');
+          set = tree.create_node({id:'set'});
+          set.create_node({classes:['crazy', 'machine']});
           
-          subset = set.create_node('Subset');
-          subset.create_node('Other Things');
-          subset.create_node('Fun Times');
+          subset = set.create_node({tag_name:'ol', id:'subset'});
+          subset.create_node({tag_name:'li'});
+          subset.create_node({tag_name:'li'});
           
           function notify(msg) {
             return function(e) {

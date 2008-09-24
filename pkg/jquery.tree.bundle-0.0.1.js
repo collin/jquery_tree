@@ -3813,7 +3813,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
 
 
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:.7em;font-family:sans-serif}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before{content:\"<\";margin-right:-.3em}li.tree_node .element:after{content:\">\";margin-left:-.3em}li.tree_node .id{display:inline;color:red;margin-left:-.3em}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
+  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:.7em;font-family:sans-serif}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;font-weight:bold;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{display:inline;padding:0;margin:0}li.tree_node .classes li{padding:0;margin:0;background:transparent;display:inline;color:green}li.tree_node .classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
 }));
 
 jQuery.tree_node = jQuery("<li class='tree_node empty'>  <span></span>  <ol></ol></li>");
@@ -3842,7 +3842,9 @@ jQuery.classes_label = jQuery("<li class=\"classes\"/>");
 
 jQuery.attributes_input = jQuery("<input class='attributes' type='text' />");
 
-jQuery.attributes_label = jQuery("<dl class=\"attributes\"><li><dt/><dd/></li></dl>");
+jQuery.attributes_label = jQuery("<dl class=\"attributes\"></dl>");
+
+jQuery.attribute_label = jQuery("<li><dt/><dd/></li>");
 
 if(!jQuery.tree) jQuery.tree = {};
 
@@ -3966,7 +3968,27 @@ console.log('lib/plugins/tag_name/tag_name.js');
 
 
 console.log('lib/plugins/dom_node/dom_node.js');
-jQuery.tree.node = jQuery.dom_node;
+//jQuery.tree.node = jQuery.dom_node;
+;(function(_) {
+  _.dom_node.fn({
+    paint: function(data) {
+      var _this = _(this)
+        ,defaults = _.extend({}, {
+          tag_name: 'div'
+          ,id: ''
+        })
+        ,data = _.extend(defaults, data);
+      
+      _this.tag_name_label().html(data.tag_name);
+      _this.id_label().html(data.id).hide_if_empty();
+      if(data.classes)
+        _this.class_list().append(_.array_to_classes_dom(data.classes));
+      if(data.attributes)
+        _this.attribute_list().append(_.object_to_attributes_dom(data.attributes));
+      return _this;
+    }
+  });
+})(jQuery);
 
 
 console.log('lib/plugins/id/id.js');
@@ -4074,10 +4096,7 @@ console.log('lib/plugins/classes/classes.js');
     }
     
     ,classes_to_dom: function() {
-      var dom_string = this.classes().map(function(cls) {
-        return '<li>'+cls+'</li>';
-      }).join('');
-      var dom = _(dom_string);
+      var dom = _.array_to_classes_dom(this.classes());
       return dom[0] === document ? null : dom;
     }
   
@@ -4089,6 +4108,12 @@ console.log('lib/plugins/classes/classes.js');
       return class_list().find('li:last');
     }
   });
+  
+  _.array_to_classes_dom = function(array) {
+    return _(array.map(function(cls) {
+      return '<li>'+cls+'</li>';
+    }).join(''));
+  }
 })(jQuery);
 
 
@@ -4152,16 +4177,25 @@ console.log('lib/plugins/attributes/attributes.js');
     }    
     
     ,attributes_to_dom: function() {
-      var dom_string = _(this[0].attributes).map(function(which, attr) {
-        if(!this.name.match(/id|class/)) {
-          return '<li><dt>'+attr.name+'</dt><dd>'+attr.value+'</dd></li>';
-        }
-      }).join('');
+      var attrs = {} 
       
-      var dom = _(dom_string);
+      _(this[0].attributes).each(function(which, attr) {
+        if(!this.name.match(/id|class/)) {
+          attrs[this.name] = this.value;
+        }
+      });
+      
+      var dom = _.object_to_attributes_dom(attrs);
       return dom[0] === document ? null : dom; 
     }
   });
+  
+  _.object_to_attributes_dom = function(object) {
+    var dom_string = "", slot;
+    for(slot in object)
+      dom_string += '<li><dt>'+slot+'</dt><dd>'+object[slot]+'</dd></li>';
+    return _(dom_string);
+  };
 })(jQuery);
 
 

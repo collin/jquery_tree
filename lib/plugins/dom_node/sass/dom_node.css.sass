@@ -3,9 +3,11 @@ li.tree_node
     :display inline
     :position relative
     :line-height 20px
+    &:before, &:after
+      :color #999
     &:before
       :content "<"
-      :margin-right -.3em
     &:after
       :content ">"
-      :margin-left -.3em
+    *
+      :cursor text
