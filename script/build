@@ -91,7 +91,7 @@ module JQuery
         f.close()
         
         f = File.open(Root/'pkg'/"jquery.tree.bundle-#{Version}.js", 'w+')
-        f.write((Root/'vendor'/'jquery'/'jquery-1.2.6.js').read << "#{vendor_string}\n\n#{scripts_string}")
+        f.write((Root/'vendor'/'jquery'/'jquery-1.2.6.js').read << "\n\n#{vendor_string}\n\n#{scripts_string}")
         f.close()
         
       end

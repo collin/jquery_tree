@@ -3547,6 +3547,8 @@ jQuery.each([ "Height", "Width" ], function(i, name){
 	};
 
 });})();
+
+
 console.log('vendor/effen/jquery.fn.js');
 (function($) {
   $.fn.fn = function() {
