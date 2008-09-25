@@ -217,7 +217,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
             ,keys
             ,modified
             ,matched
-            ,modKeys = 'shift ctrl alt meta'.split(/ /)
+            ,modKeys = 'shift ctrl alt'.split(/ /)
             ,key
             ,requested_presses
             ,presses; 
