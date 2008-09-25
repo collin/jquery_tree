@@ -580,11 +580,12 @@ console.log('lib/tree.js');
       input
         .size_to_fit()
         .one('blur', function() {
-          _(document.body).append(input.hide());
-          if(opts.complete) {
+          if(opts.complete) {        
+            _(document.body).append(input.hide());
             opts.complete();
           }
           else {
+            _(document.body).append(input.hide());
             if(opts.default_value) {
               label
                 .html(input.val() || opts.default_value)
