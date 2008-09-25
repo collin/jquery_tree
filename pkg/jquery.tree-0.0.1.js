@@ -581,28 +581,33 @@ console.log('lib/tree.js');
         .size_to_fit()
         .one('blur', function() {
           _(document.body).append(input.hide());
-          if(opts.default_value) {
-            label
-              .html(input.val() || opts.default_value)
-              .show();
-          }
-          else if(opts.hide_if_empty) {      
-            label
-              .html(input.val())
-              click.hide_if_empty();
-          }
-          else if(opts.remove_if_empty) {
-            label
-              .html(input.val())
-              .remove_if_empty();
-          }
-          else if(opts.if_empty) {
-            label
-              .html(input.val())
-              .if_empty(opts.if_empty);
+          if(opts.complete) {
+            opts.complete();
           }
           else {
-            label.html(input.val());
+            if(opts.default_value) {
+              label
+                .html(input.val() || opts.default_value)
+                .show();
+            }
+            else if(opts.hide_if_empty) {      
+              label
+                .html(input.val())
+                click.hide_if_empty();
+            }
+            else if(opts.remove_if_empty) {
+              label
+                .html(input.val())
+                .remove_if_empty();
+            }
+            else if(opts.if_empty) {
+              label
+                .html(input.val())
+                .if_empty(opts.if_empty);
+            }
+            else {
+              label.html(input.val());
+            }
           }
         });
       
