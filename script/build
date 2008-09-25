@@ -74,7 +74,6 @@ module JQuery
         end
         
         vendor = []
-        vendor << Root/'vendor'/'jquery'/'jquery-1.2.6.js'
         vendor << Root/'vendor'/'effen'/'jquery.fn.js'
         vendor << Root/'vendor'/'jquery_extensions'/'jquery.extension.js'
         vendor << Root/'vendor'/'jquery_keybinder'/'jquery.keybinder.js'
@@ -92,7 +91,7 @@ module JQuery
         f.close()
         
         f = File.open(Root/'pkg'/"jquery.tree.bundle-#{Version}.js", 'w+')
-        f.write "#{vendor_string}\n\n#{scripts_string}"
+        f.write((Root/'vendor'/'jquery'/'jquery-1.2.6.js').read << "#{vendor_string}\n\n#{scripts_string}")
         f.close()
         
       end

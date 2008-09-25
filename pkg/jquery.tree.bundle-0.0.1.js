@@ -1,4 +1,3 @@
-console.log('vendor/jquery/jquery-1.2.6.js');
 (function(){
 /*
  * jQuery 1.2.6 - New Wave Javascript
@@ -3548,8 +3547,6 @@ jQuery.each([ "Height", "Width" ], function(i, name){
 	};
 
 });})();
-
-
 console.log('vendor/effen/jquery.fn.js');
 (function($) {
   $.fn.fn = function() {
