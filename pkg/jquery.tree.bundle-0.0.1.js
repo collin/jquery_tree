@@ -3855,9 +3855,9 @@ console.log('lib/plugins/toggle/toggle.js');
   _.tree.animate = true;
   
   
-    _.tree.init_toggle_plugin = function() {
-      return this.prepend(_.toggle_button);
-    };
+  _.tree.init_toggle_plugin = function() {
+    return this.prepend(_.toggle_button.deep_clone(true));
+  };
   
   _.fn.extend({
     toggle_button: function() {
@@ -3902,9 +3902,9 @@ console.log('lib/plugins/disable/disable.js');
     ,disable_event = 'disable'
     ,enable_event = 'enable';
   
-  _.inject_disable_dom = function() {
-    _.tree_node.prepend(_.disable_button);
-  }
+  _.tree.init_disable_plugin = function(tree.options) {
+    options.node.prepend(_.disable_button.deep_clone(true));
+  };
   
   _.fn.extend({
     disable_button: function() {
@@ -3924,9 +3924,9 @@ console.log('lib/plugins/destroy/destroy.js');
 ;(function(_) {
   var destroy_event = 'destroy'
 
-  _.inject_destroy_dom = function() {
-    _.tree_node.prepend(_.destroy_button);
-  }
+  _.tree.init_destroy_plugin = function() {
+    _.tree_node.prepend(_.destroy_button.deep_clone(true));
+  };
   
   _.fn.extend({
     destroy_button: function() {
@@ -3943,8 +3943,8 @@ console.log('lib/plugins/destroy/destroy.js');
 
 console.log('lib/plugins/tag_name/tag_name.js');
 ;(function(_) {
-  _.inject_tag_name_dom = function() {
-    _.dom_node.find('.element').append(_.tag_name_label);
+  _.tree.init_tag_name_plugin = function(tree, options) {
+    options.node.find('.element').append(_.tag_name_label.deep_clone());
     _(document.body).append(_.tag_name_input);
   }
   
@@ -3993,9 +3993,10 @@ console.log('lib/plugins/dom_node/dom_node.js');
 
 console.log('lib/plugins/id/id.js');
 ;(function(_) {
-  _.inject_id_dom = function() {
-    _.dom_node.find('.element').append(_.id_label);
-  }
+  _.tree.init_id_plugin = function(tree, options) {
+    options.node.find('.element').append(_.id_label.deep_clone(true));
+    _(document.body).append(_.id_input);
+  };
 
   _.id_label.fn({
     edit: function() {
@@ -4027,9 +4028,10 @@ console.log('lib/plugins/id/id.js');
 
 console.log('lib/plugins/classes/classes.js');
 ;(function(_) {
-  _.inject_classes_dom = function() {
-    _.dom_node.find('.element').append(_.classes_label);
-  }
+  _.tree.init_classes_plugin = function(tree, options) {
+    options.node.find('.element').append(_.classes_label.deep_clone(true));
+    _(document.body).append(_.classes_input);
+  };
 
   _.classes_label.fn({
     edit: function(last) {
@@ -4119,10 +4121,10 @@ console.log('lib/plugins/classes/classes.js');
 
 console.log('lib/plugins/attributes/attributes.js');
 ;(function(_) {
-  _.inject_attributes_dom = function() {
-    _.dom_node.find('.element').append(_.attributes_label);
+  _.tree.init_attributes_plugin = function(tree, options) {
+    options.node.find('.element').append(_.attributes_label.deep_clone(true));
     _(document.body).append(_.attributes_input);
-  }
+  };
     
   _.tag_name_label.fn({
     edit: function() {
@@ -4329,7 +4331,7 @@ console.log('lib/tree.js');
       var tree = this;
       
       _(options.plugins).each(function() {
-        _.tree['init_'+this+'_plugin'](tree, options);
+        _.tree.['init_'+this+'_plugin'](tree, options);
       });
       
       return this
