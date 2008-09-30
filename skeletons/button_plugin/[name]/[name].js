@@ -1,7 +1,7 @@
-;(function(_) {
-  _.inject_<%= name %>_dom = function() {
-    _.tree_node.prepend(_.<%= name %>_button);
-  }
+;(function(_) {  
+  _.tree.init_<%= name %>_plugin = function(tree, options) {
+    return options.node.prepend(_.tree.<%= name %>_button.deep_clone(true));
+  };
   
   _.fn.extend({
     <%= name %>_button: function() {

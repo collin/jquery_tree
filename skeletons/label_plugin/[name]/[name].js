@@ -1,9 +1,9 @@
 ;(function(_) {
-  _.inject_<%= name %>_dom = function() {
-    _.dom_node.find('.element').append(_.<%= name %>_label);
-    _(document.body).append(_.<%= name %>_input);
-  }
-    
+  _.tree.init_<%= name %>_plugin = function(tree, options) {
+    options.node.find('.element').append(_.tree.<%= name %>_label.deep_clone(true));
+    _(document.body).append(_.tree.<%= name %>_input.deep_clone(true));
+  };
+  
   _.<%= name %>_label.fn({ 
     edit: function() {
 /*

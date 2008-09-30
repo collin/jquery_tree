@@ -8,8 +8,9 @@
           _(function() {
             // BAD BAD Javascript example, don't forget your "var"
             // Or I'll hurt you.
-            _.tree.use_button_plugins('toggle disable destroy');
-            tree = _('#tree').is_tree();
+            tree = _('#tree').is_tree({
+              buttons: 'toggle disable destroy'
+            });
             
             awesome = tree.create_node('Awesome');
             

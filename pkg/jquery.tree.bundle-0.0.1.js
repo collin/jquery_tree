@@ -3854,9 +3854,10 @@ console.log('lib/plugins/toggle/toggle.js');
     ,collapse_event = 'collapse';
   _.tree.animate = true;
   
-  _.inject_toggle_dom = function() {
-    _.tree_node.prepend(_.toggle_button);
-  }
+  
+    _.tree.init_toggle_plugin = function() {
+      return this.prepend(_.toggle_button);
+    };
   
   _.fn.extend({
     toggle_button: function() {
@@ -4310,44 +4311,27 @@ console.log('lib/tree.js');
     }
   });
 
-  _.extend(_.tree, {
-    button_plugins: []
-    
-    ,label_plugins: []    
-    
-    ,node: _.tree_node
-    
-    ,use_button_plugins: function(names) {
-      _(names.split(/ |,/)).each(function() {
-        _.tree.button_plugins.push(this);
-        _["inject_"+this+"_dom"]();
-      });
-    }
-    
-    ,use_label_plugins: function(names) {
-      _(names.split(/ |,/)).each(function() {
-        _.tree.label_plugins.push(this);
-        _["inject_"+this+"_dom"]();
-      });
-    }
-  });
+  function defaults() {     
+    return {
+      node: _.tree_node.deep_clone(true);
+      ,plugins: ''
+    };    
+  }
 
   var inspection_class = 'inspected';
 
   _.fn.extend({
-    child_list: function() {
-      if(this.is('ol')) return this;
-      return this.find('ol:first');
-    }
-    
-    ,parent_node: function() {
-      var node = this.parents('.tree_node:first');
-      if(node.length) return node;
-      return this.filter('.tree_node');
-    }
-    
-    ,is_tree: function() {
+  
+    is_tree: function(options) {
+      _.extend(defaults(), options);
+      options.plugins = options.plugins.split(/ /);
+      
       var tree = this;
+      
+      _(options.plugins).each(function() {
+        _.tree['init_'+this+'_plugin'](tree, options);
+      });
+      
       return this
         .click(function(e) {
             var el = _(e.target)
@@ -4355,7 +4339,7 @@ console.log('lib/tree.js');
             
             if(el.is('input')) return;
             node.blur_all();
-            _(_.tree.button_plugins).each(function() {
+            _(options.buttons).each(function() {
               if(el.hasClass(this)) el[this+'_click'](el, node);
             });
             e.preventDefault();
@@ -4367,6 +4351,23 @@ console.log('lib/tree.js');
             node.addClass(inspection_class);      
           });        
     }
+    
+    ,child_list: function() {
+      if(this.is('ol')) return this;
+      return this.find('ol:first');
+    }
+    
+    ,tree: function() {
+      if(this.hasClass('tree')) return this;
+      return this.parents('.tree:first');
+    }
+    
+    ,parent_node: function() {
+      var node = this.parents('.tree_node:first');
+      if(node.length) return node;
+      return this.filter('.tree_node');
+    }
+    
 /*
   label: the jqueried label
   input: the jqueried input elment
