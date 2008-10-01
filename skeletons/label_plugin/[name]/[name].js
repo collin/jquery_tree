@@ -6,7 +6,7 @@
 
   _.tree.<%= name %>_input
     .hide()
-    .keyup_size_to_fit()
+    .keypress_size_to_fit()
     .keybind('tab',      function() { _(this).next().fn('edit'); })
     .keybind('shift+tab', function() { _(this).prev().prev().fn('edit'); });
   
@@ -28,7 +28,7 @@
 */  
       var node = _(this).parent_node();
       return node.edit_label({
-        label: node.tree.data('tree.options').<%= name %>_label()
+        label: node.tree().data('tree.options').<%= name %>_label()
         ,input: _.tree.<%= name %>_input
       });
     }

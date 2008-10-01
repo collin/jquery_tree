@@ -1,1 +1,1 @@
-li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:"<"}li.tree_node .element:after{content:">"}li.tree_node .element *{cursor:text}
+li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:"<"}li.tree_node .element:after{content:">"}li.tree_node .element *{cursor:text}li.tree_node input{font-size:12px;font-family:monospace}
