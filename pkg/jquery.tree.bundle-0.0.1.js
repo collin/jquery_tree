@@ -3812,7 +3812,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
 
 
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:.7em;font-family:sans-serif}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;font-weight:bold;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{display:inline;padding:0;margin:0}li.tree_node .classes li{padding:0;margin:0;background:transparent;display:inline;color:green}li.tree_node .classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
+  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:.7em;font-family:sans-serif}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;font-weight:bold;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{display:inline;padding:0;margin:0}li.tree_node .classes li{padding:0;margin:0;background:transparent;display:inline;color:green}li.tree_node .classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
 }));
 
 if(!jQuery.tree) jQuery.tree = {};
@@ -3841,11 +3841,13 @@ jQuery.tree.classes_input = jQuery("<input class='classes' type='text' />");
 
 jQuery.tree.classes_label = jQuery("<ul class=\"classes\"/>");
 
-jQuery.tree.attributes_input = jQuery("<input class='attributes' type='text' />");
-
 jQuery.tree.attributes_label = jQuery("<dl class=\"attributes\"></dl>");
 
 jQuery.tree.attribute_label = jQuery("<li><dt/><dd/></li>");
+
+jQuery.tree.attr_input = jQuery("<input class='attr' type='text' />");
+
+jQuery.tree.value_input = jQuery("<input class='value' type='text' />");
 
 console.log('lib/plugins/toggle/toggle.js');
 ;(function(_) {
@@ -3913,8 +3915,14 @@ console.log('lib/plugins/disable/disable.js');
     
     ,disable_click: function(el, node) {
       el.toggleClass(active_class);
-      if(el.hasClass(active_class)) node.trigger(disable_event);
-      else                     node.trigger(enable_event);    
+      if(el.hasClass(active_class)) 
+        node
+          .addClass('disabled')
+          .trigger(disable_event);
+      else 
+        node
+          .removeClass('disabled')
+          .trigger(enable_event); 
     }
   });
 })(jQuery);
@@ -3948,11 +3956,14 @@ console.log('lib/plugins/tag_name/tag_name.js');
   });
   
   _.tree.tag_name_input
+    .hide()
+    .keyup_size_to_fit()
     .keybind('tab',      function() { _(this).next().fn('edit'); })
     .keybind('shift+tab', function() { _(this).prev().fn('edit'); });
   
   _.tree.init_tag_name_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.tag_name_label.deep_clone(true));
+    options.tag_name_input = _.tree.tag_name_input.clone(true);
     _(document.body).append(_.tree.tag_name_input);
   }
   
@@ -3961,7 +3972,7 @@ console.log('lib/plugins/tag_name/tag_name.js');
       var node = _(this).parent_node();
       return node.edit_label({
         label: node.tag_name_label()
-        ,input: _.tree.tag_name_input
+        ,input: node.tree().data('tree.options').tag_name_input
         ,default_value: 'div'
       });
     }
@@ -4007,11 +4018,14 @@ console.log('lib/plugins/id/id.js');
   });
   
   _.tree.id_input
+    .hide()
+    .keyup_size_to_fit()
     .keybind('tab',      function() { _(this).next().fn('edit'); })
     .keybind('shift+tab', function() { _(this).prev().prev().fn('edit'); });
   
   _.tree.init_id_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.id_label.deep_clone(true));
+    options.id_input = _.tree.id_input.clone(true);
     _(document.body).append(_.tree.id_input);
   };
 
@@ -4028,7 +4042,7 @@ console.log('lib/plugins/id/id.js');
       var node = _(this).parent_node();
       return node.edit_label({
         label: node.id_label()
-        ,input: _.tree.id_input
+        ,input: node.tree().data('tree.options').id_input
         ,hide_if_empty: true
         ,do_not_hide_label: true
       });
@@ -4051,6 +4065,8 @@ console.log('lib/plugins/classes/classes.js');
 
   });
   _.tree.classes_input
+    .hide()
+    .keyup_size_to_fit()
     .keybind('tab', function() { 
       var _this = _(this);
       _this.parent().next_class(_this.prev());
@@ -4062,6 +4078,7 @@ console.log('lib/plugins/classes/classes.js');
       
   _.tree.init_classes_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.classes_label.deep_clone(true));
+    options.classes_input = _.tree.classes_input.clone(true);
     _(document.body).append(_.tree.classes_input);
   };
 
@@ -4098,7 +4115,7 @@ console.log('lib/plugins/classes/classes.js');
       var node = this.parent_node();
       return node.edit_label({
         label: cls
-        ,input: _.tree.classes_input
+        ,input: node.tree().data('tree.options').classes_input
         ,remove_if_empty: true
         ,do_not_hide_label: true
       });    
@@ -4119,7 +4136,7 @@ console.log('lib/plugins/classes/classes.js');
     ,next_class: function(cls) {
       var next = cls.next().next();
       if(next.length) return this.edit_class(next);
-      return this.next().fn('edit');
+      return this.next().log().fn('edit');
     }
   
     ,class_string: function() {
@@ -4163,16 +4180,41 @@ console.log('lib/plugins/attributes/attributes.js');
     if(el.is('dt')) _this.edit_attr(attr);
     if(el.is('dd')) _this.edit_value(attr); 
   });
+ 
+  _.tree.attr_input
+    .hide()
+    .keyup_size_to_fit()
+    .keybind('tab', function() { 
+      var _this = _(this);
+      _this.parent_node().edit_value(_this.parent());
+    })
+    .keybind('shift+tab', function() { 
+      var _this = _(this);
+      _this.parent_node().previous_attr(_this.parent());
+    });
+ 
+  _.tree.value_input
+    .hide()
+    .keybind('tab', function() {  
+      var _this = _(this);
+      _this.parent_node().next_attr(_this.parent());
+    })
+    .keybind('shift+tab', function() {
+      var _this = _(this);
+      _this.parent_node().edit_attr(_this.parents('li:first'));
+    });
   
   _.tree.init_attributes_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.attributes_label.deep_clone(true));
+    options.attr_input = _.tree.attr_input.clone(true);
+    options.value_input = _.tree.value_input.clone(true);
     _(document.body).append(_.tree.attributes_input);
   };
     
   _.tree.attributes_label.fn({
     edit: function() {
       var _this = _(this)
-        ,first_attr = _this.attribute_list().find('li:first');
+        ,first_attr = _this.find('li:first');
       
       if(first_attr.length) return _this.edit_attr(first_attr);
       
@@ -4187,26 +4229,26 @@ console.log('lib/plugins/attributes/attributes.js');
     
     ,new_attr: function() {
       var attr = _('<li><dt><dd></li>');
-      this.attribute_list().append(attr);
+      this.append(attr);
       return this.edit_attr(attr);
     }
     
     ,previous_attr: function(attr) {
       var prev = attr.prev('li');
       if(prev.length) return this.edit_value(prev);
-      this.prev().fn('edit', 'last');
+      attr.parent().prev().fn('edit', 'last');
     }
     
     ,next_attr: function(attr) {
-      var next = attr.next('li');
+      var next = attr.parent().next('li');
       if(next.length) return this.edit_attr(next);
-      return this.parent_node().new_attr();
+      return this.new_attr();
     }
     
     ,edit_attr: function(label) {
       return this.edit_label({
         label: label.find('dt')
-        ,input: _.tree.attributes_input
+        ,input: label.tree().data('tree.options').attr_input
         ,insertion_method: 'before'
         ,if_empty: function() {this.parent().remove()}
         ,do_not_hide_label: true
@@ -4216,7 +4258,7 @@ console.log('lib/plugins/attributes/attributes.js');
     ,edit_value: function(label) {
       return this.edit_label({
         label: label.find('dd')
-        ,input: _.tree.attributes_input
+        ,input: label.tree().data('tree.options').value_input
         ,insertion_method: 'append'
         ,do_not_hide_label: true
       });

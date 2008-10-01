@@ -5,11 +5,14 @@
   });
 
   _.tree.<%= name %>_input
+    .hide()
+    .keyup_size_to_fit()
     .keybind('tab',      function() { _(this).next().fn('edit'); })
     .keybind('shift+tab', function() { _(this).prev().prev().fn('edit'); });
   
   _.tree.init_<%= name %>_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.<%= name %>_label.deep_clone(true));
+    options.<%= name %>_input = _.tree.<%= name %>_input.clone(true);
     _(document.body).append(_.tree.<%= name %>_input);
   };
   
@@ -25,7 +28,7 @@
 */  
       var node = _(this).parent_node();
       return node.edit_label({
-        label: node.<%= name %>_label()
+        label: node.tree.data('tree.options').<%= name %>_label()
         ,input: _.tree.<%= name %>_input
       });
     }
