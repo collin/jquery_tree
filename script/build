@@ -54,6 +54,7 @@ module JQuery
   jQuery("head").append("#{style_el}");
 }));})
 
+        scripts << StringIO.new("if(!jQuery.tree) jQuery.tree = {};")
         
         Pathname.glob(Root/'lib'/'**'/'*.html').each do |script|
           flat = script.read
@@ -62,12 +63,10 @@ module JQuery
           flat.gsub! /\/\*.*\*\//, "" 
           flat.gsub! /\"/ , "\\\""
           name = script.basename.to_s.gsub('.html', '')
-          jquery = "jQuery.#{name} = jQuery(\"#{flat}\");"       
+          jquery = "jQuery.tree.#{name} = jQuery(\"#{flat}\");"       
           io = StringIO.new jquery
           scripts << io
         end 
-        
-        scripts << StringIO.new("if(!jQuery.tree) jQuery.tree = {};")
         
         Pathname.glob(Root/'lib'/'**'/'*.js').each do |script|
           scripts << script

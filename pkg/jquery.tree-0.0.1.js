@@ -2,37 +2,37 @@
   jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:.7em;font-family:sans-serif}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;font-weight:bold;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{display:inline;padding:0;margin:0}li.tree_node .classes li{padding:0;margin:0;background:transparent;display:inline;color:green}li.tree_node .classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
 }));
 
-jQuery.tree_node = jQuery("<li class='tree_node empty'>  <span></span>  <ol></ol></li>");
-
-jQuery.toggle_button = jQuery("<button class='toggle'></button>");
-
-jQuery.disable_button = jQuery("<button class='disable'></button>");
-
-jQuery.destroy_button = jQuery("<button class='destroy'></button>");
-
-jQuery.tag_name_button = jQuery("<button class='tag_name'></button>");
-
-jQuery.tag_name_input = jQuery("<input class='tag_name' type='text' />");
-
-jQuery.tag_name_label = jQuery("<label/>");
-
-jQuery.dom_node = jQuery("<li class='tree_node empty'>  <div class='element'></div>  <ol></ol></li>");
-
-jQuery.id_input = jQuery("<input class='id' type='text' />");
-
-jQuery.id_label = jQuery("<div class=\"id\"/>");
-
-jQuery.classes_input = jQuery("<input class='classes' type='text' />");
-
-jQuery.classes_label = jQuery("<li class=\"classes\"/>");
-
-jQuery.attributes_input = jQuery("<input class='attributes' type='text' />");
-
-jQuery.attributes_label = jQuery("<dl class=\"attributes\"></dl>");
-
-jQuery.attribute_label = jQuery("<li><dt/><dd/></li>");
-
 if(!jQuery.tree) jQuery.tree = {};
+
+jQuery.tree.tree_node = jQuery("<li class='tree_node empty'>  <span></span>  <ol></ol></li>");
+
+jQuery.tree.toggle_button = jQuery("<button class='toggle'></button>");
+
+jQuery.tree.disable_button = jQuery("<button class='disable'></button>");
+
+jQuery.tree.destroy_button = jQuery("<button class='destroy'></button>");
+
+jQuery.tree.tag_name_button = jQuery("<button class='tag_name'></button>");
+
+jQuery.tree.tag_name_input = jQuery("<input class='tag_name' type='text' />");
+
+jQuery.tree.tag_name_label = jQuery("<label/>");
+
+jQuery.tree.dom_node = jQuery("<li class='tree_node empty'>  <div class='element'></div>  <ol></ol></li>");
+
+jQuery.tree.id_input = jQuery("<input class='id' type='text' />");
+
+jQuery.tree.id_label = jQuery("<div class=\"id\"/>");
+
+jQuery.tree.classes_input = jQuery("<input class='classes' type='text' />");
+
+jQuery.tree.classes_label = jQuery("<li class=\"classes\"/>");
+
+jQuery.tree.attributes_input = jQuery("<input class='attributes' type='text' />");
+
+jQuery.tree.attributes_label = jQuery("<dl class=\"attributes\"></dl>");
+
+jQuery.tree.attribute_label = jQuery("<li><dt/><dd/></li>");
 
 console.log('lib/plugins/toggle/toggle.js');
 ;(function(_) {
@@ -42,8 +42,8 @@ console.log('lib/plugins/toggle/toggle.js');
   _.tree.animate = true;
   
   
-  _.tree.init_toggle_plugin = function() {
-    return this.prepend(_.toggle_button.deep_clone(true));
+  _.tree.init_toggle_plugin = function(tree, options) {
+    options.node.prepend(_.tree.toggle_button.deep_clone(true));
   };
   
   _.fn.extend({
@@ -89,8 +89,8 @@ console.log('lib/plugins/disable/disable.js');
     ,disable_event = 'disable'
     ,enable_event = 'enable';
   
-  _.tree.init_disable_plugin = function(tree.options) {
-    options.node.prepend(_.disable_button.deep_clone(true));
+  _.tree.init_disable_plugin = function(tree, options) {
+    options.node.prepend(_.tree.disable_button.deep_clone(true));
   };
   
   _.fn.extend({
@@ -111,8 +111,8 @@ console.log('lib/plugins/destroy/destroy.js');
 ;(function(_) {
   var destroy_event = 'destroy'
 
-  _.tree.init_destroy_plugin = function() {
-    _.tree_node.prepend(_.destroy_button.deep_clone(true));
+  _.tree.init_destroy_plugin = function(tree, options) {
+    options.node.prepend(_.tree.destroy_button.deep_clone(true));
   };
   
   _.fn.extend({
@@ -131,11 +131,11 @@ console.log('lib/plugins/destroy/destroy.js');
 console.log('lib/plugins/tag_name/tag_name.js');
 ;(function(_) {
   _.tree.init_tag_name_plugin = function(tree, options) {
-    options.node.find('.element').append(_.tag_name_label.deep_clone());
-    _(document.body).append(_.tag_name_input);
+    options.node.find('.element').append(_.tree.tag_name_label.deep_clone());
+    _(document.body).append(_.tree.tag_name_input);
   }
   
-  _.tag_name_label.fn({
+  _.tree.tag_name_label.fn({
     edit: function() {
       var node = parent_node();
       return node.edit_label({
@@ -157,7 +157,7 @@ console.log('lib/plugins/tag_name/tag_name.js');
 console.log('lib/plugins/dom_node/dom_node.js');
 //jQuery.tree.node = jQuery.dom_node;
 ;(function(_) {
-  _.dom_node.fn({
+  _.tree.dom_node.fn({
     paint: function(data) {
       var _this = _(this)
         ,defaults = _.extend({}, {
@@ -181,11 +181,11 @@ console.log('lib/plugins/dom_node/dom_node.js');
 console.log('lib/plugins/id/id.js');
 ;(function(_) {
   _.tree.init_id_plugin = function(tree, options) {
-    options.node.find('.element').append(_.id_label.deep_clone(true));
-    _(document.body).append(_.id_input);
+    options.node.find('.element').append(_.tree.id_label.deep_clone(true));
+    _(document.body).append(_.tree.id_input);
   };
 
-  _.id_label.fn({
+  _.tree.id_label.fn({
     edit: function() {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
@@ -216,11 +216,11 @@ console.log('lib/plugins/id/id.js');
 console.log('lib/plugins/classes/classes.js');
 ;(function(_) {
   _.tree.init_classes_plugin = function(tree, options) {
-    options.node.find('.element').append(_.classes_label.deep_clone(true));
-    _(document.body).append(_.classes_input);
+    options.node.find('.element').append(_.tree.classes_label.deep_clone(true));
+    _(document.body).append(_.tree.classes_input);
   };
 
-  _.classes_label.fn({
+  _.tree.classes_label.fn({
     edit: function(last) {
       if(last) {
         var last_class = this.last_class();
@@ -251,7 +251,7 @@ console.log('lib/plugins/classes/classes.js');
       var node = this.parent_node(cls);
       return node.edit_label({
         label: cls
-        ,input: _.classes_input
+        ,input: _.tree.classes_input
         ,remove_if_empty: true
         ,do_not_hide_label: true
       });    
@@ -309,11 +309,11 @@ console.log('lib/plugins/classes/classes.js');
 console.log('lib/plugins/attributes/attributes.js');
 ;(function(_) {
   _.tree.init_attributes_plugin = function(tree, options) {
-    options.node.find('.element').append(_.attributes_label.deep_clone(true));
-    _(document.body).append(_.attributes_input);
+    options.node.find('.element').append(_.tree.attributes_label.deep_clone(true));
+    _(document.body).append(_.tree.attributes_input);
   };
     
-  _.tag_name_label.fn({
+  _.tree.tag_name_label.fn({
     edit: function() {
       var first_attr = this.attribute_list().find('li:first');
       
@@ -349,7 +349,7 @@ console.log('lib/plugins/attributes/attributes.js');
     ,edit_attr: function(label) {
       return this.edit_label({
         label: label.find('dt')
-        ,input: _.attr_input
+        ,input: _.tree.attr_input
         ,insertion_method: 'before'
         ,if_empty: function() {this.parent().remove()}
         ,do_not_hide_label: true
@@ -359,7 +359,7 @@ console.log('lib/plugins/attributes/attributes.js');
     ,edit_value: function(label) {
       return this.edit_label({
         label: label.find('dd')
-        ,input: _.value_input
+        ,input: _.tree.value_input
         ,insertion_method: 'append'
         ,do_not_hide_label: true
       });
@@ -494,7 +494,7 @@ console.warn('PATCHED bubble custom event')
 
 console.log('lib/tree.js');
 ;(function(_){
-  _.tree_node.fn({
+  _.tree.tree_node.fn({
     paint: function(label) {
       return _(this).find('span:first').html(label);
     }
@@ -502,7 +502,7 @@ console.log('lib/tree.js');
 
   function defaults() {     
     return {
-      node: _.tree_node.deep_clone(true);
+      node: _.tree.tree_node.deep_clone(true)
       ,plugins: ''
     };    
   }
@@ -512,13 +512,14 @@ console.log('lib/tree.js');
   _.fn.extend({
   
     is_tree: function(options) {
-      _.extend(defaults(), options);
+      options = _.extend(defaults(), options);
       options.plugins = options.plugins.split(/ /);
       
       var tree = this;
+      tree.data('tree.options', options)
       
       _(options.plugins).each(function() {
-        _.tree.['init_'+this+'_plugin'](tree, options);
+        _.tree['init_'+this+'_plugin'].call(tree, tree, options);
       });
       
       return this
@@ -528,7 +529,7 @@ console.log('lib/tree.js');
             
             if(el.is('input')) return;
             node.blur_all();
-            _(options.buttons).each(function() {
+            _(options.plugins).each(function() {
               if(el.hasClass(this)) el[this+'_click'](el, node);
             });
             e.preventDefault();
@@ -635,7 +636,7 @@ console.log('lib/tree.js');
     }
     
     ,create_node: function(contents) {
-      var node = _.tree.node.deep_clone();
+      var node = this.tree().data('tree.options').node.deep_clone();
       node.fn('paint', contents);
       this.removeClass('empty');
       this.child_list().append(node);

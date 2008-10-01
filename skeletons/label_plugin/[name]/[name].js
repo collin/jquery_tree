@@ -4,7 +4,7 @@
     _(document.body).append(_.tree.<%= name %>_input);
   };
   
-  _.<%= name %>_label.fn({ 
+  _.tree.<%= name %>_label.fn({ 
     edit: function() {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
@@ -17,7 +17,7 @@
       var node = this.parent_node();
       return node.edit_label({
         label: node.<%= name %>_label()
-        ,input: _.<%= name %>_input
+        ,input: _.tree.<%= name %>_input
       });
     }
   });
