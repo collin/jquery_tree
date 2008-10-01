@@ -1,4 +1,9 @@
 ;(function(_) {
+  _.tree.<%= name %>_label.click(function(e) {
+    e.preventDefault();
+    _(this).fn('edit');
+  });
+  
   _.tree.init_<%= name %>_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.<%= name %>_label.deep_clone(true));
     _(document.body).append(_.tree.<%= name %>_input);

@@ -26,7 +26,7 @@ jQuery.tree.id_label = jQuery("<div class=\"id\"/>");
 
 jQuery.tree.classes_input = jQuery("<input class='classes' type='text' />");
 
-jQuery.tree.classes_label = jQuery("<li class=\"classes\"/>");
+jQuery.tree.classes_label = jQuery("<ul class=\"classes\"/>");
 
 jQuery.tree.attributes_input = jQuery("<input class='attributes' type='text' />");
 
@@ -130,6 +130,11 @@ console.log('lib/plugins/destroy/destroy.js');
 
 console.log('lib/plugins/tag_name/tag_name.js');
 ;(function(_) {
+  _.tree.tag_name_label.click(function(e) {
+    e.preventDefault();
+    _(this).fn('edit');
+  });
+  
   _.tree.init_tag_name_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.tag_name_label.deep_clone());
     _(document.body).append(_.tree.tag_name_input);
@@ -180,6 +185,11 @@ console.log('lib/plugins/dom_node/dom_node.js');
 
 console.log('lib/plugins/id/id.js');
 ;(function(_) {
+  _.tree.id_label.click(function(e) {
+    e.preventDefault();
+    _(this).fn('edit');
+  });
+  
   _.tree.init_id_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.id_label.deep_clone(true));
     _(document.body).append(_.tree.id_input);
@@ -215,6 +225,11 @@ console.log('lib/plugins/id/id.js');
 
 console.log('lib/plugins/classes/classes.js');
 ;(function(_) {
+  _.tree.classes_label.click(function(e) {
+    e.preventDefault();
+    _(this).edit_class(_(e.target));
+  });
+  
   _.tree.init_classes_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.classes_label.deep_clone(true));
     _(document.body).append(_.tree.classes_input);
@@ -239,7 +254,7 @@ console.log('lib/plugins/classes/classes.js');
       return this.find('.classes:first');
     }
 
-    ,edit_class: function() {
+    ,edit_class: function(cls) {
 /*
   insertion_method: method to insert the input: 'append', 'before', etc.
     defaults to 'after'
@@ -308,12 +323,21 @@ console.log('lib/plugins/classes/classes.js');
 
 console.log('lib/plugins/attributes/attributes.js');
 ;(function(_) {
+  _.tree.attributes_label.click(function(e) {
+    e.preventDefault();
+    var el = _(e.target)
+      ,_this = _(this)
+      ,attr = el.parent();
+    if(el.is('dt')) _this.edit_attribute(attr);
+    if(el.is('dd')) _this.edit_value(attr); 
+  });
+  
   _.tree.init_attributes_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.attributes_label.deep_clone(true));
     _(document.body).append(_.tree.attributes_input);
   };
     
-  _.tree.tag_name_label.fn({
+  _.tree.attributes_label.fn({
     edit: function() {
       var first_attr = this.attribute_list().find('li:first');
       
@@ -540,6 +564,7 @@ console.log('lib/tree.js');
            
       return this
         .click(function(e) {
+            e.preventDefault();
             var el = _(e.target)
               ,node = el.parent_node();
             
@@ -548,7 +573,6 @@ console.log('lib/tree.js');
             _(options.plugins).each(function() {
               if(el.hasClass(this)) el[this+'_click'](el, node);
             });
-            e.preventDefault();
           })
         .mouseover(function(e) {
             var node = _(e.target);
