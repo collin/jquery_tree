@@ -131,12 +131,15 @@ console.log('lib/plugins/destroy/destroy.js');
 console.log('lib/plugins/tag_name/tag_name.js');
 ;(function(_) {
   _.tree.tag_name_label.click(function(e) {
-    e.preventDefault();
     _(this).fn('edit');
   });
   
+  _.tree.tag_name_input
+    .keybind('tab',      function() { _(this).next().fn('edit'); })
+    .keybind('shift+tab', function() { _(this).prev().fn('edit'); });
+  
   _.tree.init_tag_name_plugin = function(tree, options) {
-    options.node.find('.element').append(_.tree.tag_name_label.deep_clone());
+    options.node.find('.element').append(_.tree.tag_name_label.deep_clone(true));
     _(document.body).append(_.tree.tag_name_input);
   }
   
@@ -145,7 +148,7 @@ console.log('lib/plugins/tag_name/tag_name.js');
       var node = _(this).parent_node();
       return node.edit_label({
         label: node.tag_name_label()
-        ,input: _.tag_name_input
+        ,input: _.tree.tag_name_input
         ,default_value: 'div'
       });
     }
@@ -190,6 +193,10 @@ console.log('lib/plugins/id/id.js');
     _(this).fn('edit');
   });
   
+  _.tree.id_input
+    .keybind('tab',      function() { _(this).next().fn('edit'); })
+    .keybind('shift+tab', function() { _(this).prev().prev().fn('edit'); });
+  
   _.tree.init_id_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.id_label.deep_clone(true));
     _(document.body).append(_.tree.id_input);
@@ -208,7 +215,7 @@ console.log('lib/plugins/id/id.js');
       var node = _(this).parent_node();
       return node.edit_label({
         label: node.id_label()
-        ,input: _.id_input
+        ,input: _.tree.id_input
         ,hide_if_empty: true
         ,do_not_hide_label: true
       });
@@ -228,8 +235,18 @@ console.log('lib/plugins/classes/classes.js');
   _.tree.classes_label.click(function(e) {
     e.preventDefault();
     _(this).edit_class(_(e.target));
+
   });
-  
+  _.tree.classes_input
+    .keybind('tab', function() { 
+      var _this = _(this);
+      _this.parent().next_class(_this.prev());
+    })
+    .keybind('shift+tab', function() { 
+      var _this = _(this);
+      _this.parent().previous_class(_this.prev());
+    });
+      
   _.tree.init_classes_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.classes_label.deep_clone(true));
     _(document.body).append(_.tree.classes_input);
@@ -239,13 +256,14 @@ console.log('lib/plugins/classes/classes.js');
     edit: function(last) {
       var _this = _(this);
       if(last) {
-        var last_class = _this.last_class();
+        var last_class = _this.parent_node().last_class();
         if(last_class.length) return _this.edit_class(last_class);
       }
       else {
-        var first_class = _this.first_class();
+        var first_class = _this.parent_node().first_class();
         if(first_class.length) return _this.edit_class(first_class);
-      }      
+      }
+      
       return _this.new_class();    
     }
   });
@@ -264,7 +282,7 @@ console.log('lib/plugins/classes/classes.js');
   hide_if_empty: hide the label if the value is ""
   remove_if_empty: remove the label if the value is ""
 */  
-      var node = this.parent_node(cls);
+      var node = this.parent_node();
       return node.edit_label({
         label: cls
         ,input: _.tree.classes_input
@@ -275,18 +293,18 @@ console.log('lib/plugins/classes/classes.js');
   
     ,new_class: function() {
       var cls = _('<li>');
-      this.class_list().append(cls);
+      this.parent_node().class_list().append(cls);
       return this.edit_class(cls);
     }
   
     ,previous_class: function(cls) {
-      var prev = cls.prev('li').prev('li').prev('li');
+      var prev = cls.prev('li');
       if(prev.length) return this.edit_class(prev);
       return this.prev().fn('edit');
     }
     
     ,next_class: function(cls) {
-      var next = cls.next('li');
+      var next = cls.next().next();
       if(next.length) return this.edit_class(next);
       return this.next().fn('edit');
     }
@@ -310,7 +328,7 @@ console.log('lib/plugins/classes/classes.js');
     }
     
     ,first_class: function() {
-      return class_list().find('li:last');
+      return this.class_list().find('li:first');
     }
   });
   
@@ -329,7 +347,7 @@ console.log('lib/plugins/attributes/attributes.js');
     var el = _(e.target)
       ,_this = _(this)
       ,attr = el.parent();
-    if(el.is('dt')) _this.edit_attribute(attr);
+    if(el.is('dt')) _this.edit_attr(attr);
     if(el.is('dd')) _this.edit_value(attr); 
   });
   
@@ -375,7 +393,7 @@ console.log('lib/plugins/attributes/attributes.js');
     ,edit_attr: function(label) {
       return this.edit_label({
         label: label.find('dt')
-        ,input: _.tree.attr_input
+        ,input: _.tree.attributes_input
         ,insertion_method: 'before'
         ,if_empty: function() {this.parent().remove()}
         ,do_not_hide_label: true
@@ -385,7 +403,7 @@ console.log('lib/plugins/attributes/attributes.js');
     ,edit_value: function(label) {
       return this.edit_label({
         label: label.find('dd')
-        ,input: _.tree.value_input
+        ,input: _.tree.attributes_input
         ,insertion_method: 'append'
         ,do_not_hide_label: true
       });
@@ -571,7 +589,6 @@ console.log('lib/tree.js');
               ,node = el.parent_node();
             
             if(el.is('input')) return;
-            node.blur_all();
             _(options.plugins).each(function() {
               if(el.hasClass(this)) 
                 if(el[this+'_click']) 
@@ -624,7 +641,7 @@ console.log('lib/tree.js');
       else label.hide();
       
       label[opts.insertion_method || 'after'](input.show());
-     
+      
       input
         .size_to_fit()
         .one('blur', function() {
@@ -642,7 +659,7 @@ console.log('lib/tree.js');
             else if(opts.hide_if_empty) {      
               label
                 .html(input.val())
-                click.hide_if_empty();
+                .hide_if_empty();
             }
             else if(opts.remove_if_empty) {
               label

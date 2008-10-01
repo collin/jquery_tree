@@ -3,6 +3,10 @@
     e.preventDefault();
     _(this).fn('edit');
   });
+
+  _.tree.<%= name %>_input
+    .keybind('tab',      function() { _(this).next().fn('edit'); })
+    .keybind('shift+tab', function() { _(this).prev().prev().fn('edit'); });
   
   _.tree.init_<%= name %>_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.<%= name %>_label.deep_clone(true));
