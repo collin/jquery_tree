@@ -3827,7 +3827,7 @@ jQuery.tree.tag_name_button = jQuery("<button class='tag_name'></button>");
 
 jQuery.tree.tag_name_input = jQuery("<input class='tag_name' type='text' />");
 
-jQuery.tree.tag_name_label = jQuery("<label/>");
+jQuery.tree.tag_name_label = jQuery("<label class='tag_name'></label>");
 
 jQuery.tree.dom_node = jQuery("<li class='tree_node empty'>  <div class='element'></div>  <ol></ol></li>");
 
@@ -4233,7 +4233,7 @@ console.log('lib/plugins/attributes/attributes.js');
     }
     
     ,new_attr: function() {
-      var attr = _('<li><dt><dd></li>');
+      var attr = _('<li><dt class="attr"><dd class="value"></li>');
       this.append(attr);
       return this.edit_attr(attr);
     }
@@ -4286,7 +4286,7 @@ console.log('lib/plugins/attributes/attributes.js');
   _.object_to_attributes_dom = function(object) {
     var dom_string = "", slot;
     for(slot in object)
-      dom_string += '<li><dt>'+slot+'</dt><dd>'+object[slot]+'</dd></li>';
+      dom_string += '<li><dt class="attr">'+slot+'</dt><dd class="value">'+object[slot]+'</dd></li>';
     return _(dom_string);
   };
 })(jQuery);
@@ -4334,21 +4334,49 @@ console.log('lib/plugins/html_editor/html_editor.js');
           .tag_name_label()
             .fn('edit');
       })
-      .keybind('ctrl+up', function() {
+      .keybind('ctrl+up', function(e) {
+        var input = _(e.target)
+          ,node = input.parent_node();
+        node.prev('li').find('.element:first .'+input.attr('class')).fn('edit');
       })
-      .keybind('ctrl+down', function() {
+      .keybind('ctrl+down', function(e) {
+        var input = _(e.target)
+          ,node = input.parent_node();
+        node.next('li').find('.element:first .'+input.attr('class')).fn('edit');
       })
-      .keybind('ctrl+left', function() {
+      .keybind('ctrl+left', function(e) {
+        var input = _(e.target)
+          ,node = input.parent_node();
+        node.parent_node().find('.element:first .'+input.attr('class')).fn('edit');
       })
-      .keybind('ctrl+right', function() {
+      .keybind('ctrl+right', function(e) {
+        var input = _(e.target)
+          ,node = input.parent_node();
+        node.child_list().find('li:first').find('.element:first .'+input.attr('class')).fn('edit');
       })
-      .keybind('ctrl+shift+up', function() {
+      .keybind('ctrl+shift+up', function(e) {
+        var input = _(e.target)
+          ,node = input.parent_node();
+        node.prev('li').before(node);
+        input.focus();
       })
-      .keybind('ctrl+shift+down', function() {
+      .keybind('ctrl+shift+down', function(e) {
+        var input = _(e.target)
+          ,node = input.parent_node();
+        node.next('li').after(node);
+        input.focus();
       })
-      .keybind('ctrl+shift+left', function() {
+      .keybind('ctrl+shift+left', function(e) {
+        var input = _(e.target)
+          ,node = input.parent_node();
+        node.parent_node().before(node);
+        input.focus();
       })
-      .keybind('ctrl+shift+right', function() {
+      .keybind('ctrl+shift+right', function(e) {
+        var input = _(e.target)
+          ,node = input.parent_node();
+        node.next().child_list().prepend(node);
+        input.focus();
       });
   };
 })(jQuery);
