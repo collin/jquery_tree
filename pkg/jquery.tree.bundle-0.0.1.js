@@ -3627,13 +3627,8 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
       return this.removeClass('empty');
     }
     
-    ,clear: function() {
-      return this.html('');
-    }
-    
     ,remove_class_on_all_children_and_self: function(cls) {
-      this.find('.'+cls).removeClass(cls);
-      this.removeClass(cls);
+      this.find('.'+cls).andSelf().removeClass(cls);
       return this;
     }
     
@@ -3646,12 +3641,13 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
     }
     
     ,size_to_fit: function() {
-      return this.attr('size', this.val().length || 1);
+      return this.attr('size', this.val().length + 1 || 1);
     }
     
-    ,keyup_size_to_fit: function() {
-      return this.keyup(function(e) {
-        _(this).size_to_fit();
+    ,keypress_size_to_fit: function() {
+      return this.keypress(function(e) {
+        var _this = _(this);
+        setTimeout(function() {_this.size_to_fit();}, 0);
       });
     }
 
@@ -3678,6 +3674,8 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
       return this;
     }
   });
+
+  _.fn.clear = _.fn.empty;
 })(jQuery);
 
 
@@ -3812,7 +3810,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
 
 
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:12px;font-family:monospace}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{color:blue;font-weight:bold;display:inline}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node input{font-size:12px;font-family:monospace}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{display:inline;padding:0;margin:0}li.tree_node .classes li{padding:0;margin:0;background:transparent;display:inline;color:green}li.tree_node .classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
+  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:12px;font-family:monospace}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{display:inline}li.tree_node label,li.tree_node input.tag_name{color:blue;font-weight:bold}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node input{border:1px outset;margin:0;padding:0;-moz-border-radius:5px;padding-left:5px;font-size:12px;font-family:monospace}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{color:green}li.tree_node ul.classes{display:inline;padding:0;margin:0}li.tree_node ul.classes li{padding:0;margin:0;background:transparent;display:inline}li.tree_node ul.classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node input.attr{color:blue}li.tree_node input.value{color:red}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
 }));
 
 if(!jQuery.tree) jQuery.tree = {};
@@ -3957,7 +3955,7 @@ console.log('lib/plugins/tag_name/tag_name.js');
   
   _.tree.tag_name_input
     .hide()
-    .keyup_size_to_fit()
+    .keypress_size_to_fit()
     .keybind('tab',      function() { _(this).next().fn('edit'); })
     .keybind('shift+tab', function() { _(this).prev().fn('edit'); });
   
@@ -4201,7 +4199,7 @@ console.log('lib/plugins/attributes/attributes.js');
       _this.parent_node().next_attr(_this.parent());
     })
     .keybind('shift+tab', function() {
-      var _this n= _(this);
+      var _this = _(this);
       _this.parent_node().edit_attr(_this.parents('li:first'));
     });
   

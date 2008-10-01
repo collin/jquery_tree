@@ -76,13 +76,8 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
       return this.removeClass('empty');
     }
     
-    ,clear: function() {
-      return this.html('');
-    }
-    
     ,remove_class_on_all_children_and_self: function(cls) {
-      this.find('.'+cls).removeClass(cls);
-      this.removeClass(cls);
+      this.find('.'+cls).andSelf().removeClass(cls);
       return this;
     }
     
@@ -95,12 +90,13 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
     }
     
     ,size_to_fit: function() {
-      return this.attr('size', this.val().length || 1);
+      return this.attr('size', this.val().length + 1 || 1);
     }
     
-    ,keyup_size_to_fit: function() {
-      return this.keyup(function(e) {
-        _(this).size_to_fit();
+    ,keypress_size_to_fit: function() {
+      return this.keypress(function(e) {
+        var _this = _(this);
+        setTimeout(function() {_this.size_to_fit();}, 0);
       });
     }
 
@@ -127,6 +123,8 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
       return this;
     }
   });
+
+  _.fn.clear = _.fn.empty;
 })(jQuery);
 
 
