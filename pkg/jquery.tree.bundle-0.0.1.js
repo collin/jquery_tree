@@ -3955,7 +3955,7 @@ console.log('lib/plugins/tag_name/tag_name.js');
   
   _.tree.tag_name_label.fn({
     edit: function() {
-      var node = parent_node();
+      var node = _(this).parent_node();
       return node.edit_label({
         label: node.tag_name_label()
         ,input: _.tag_name_input
@@ -4018,7 +4018,7 @@ console.log('lib/plugins/id/id.js');
   hide_if_empty: hide the label if the value is ""
   remove_if_empty: remove the label if the value is ""
 */  
-      var node = this.parent_node();
+      var node = _(this).parent_node();
       return node.edit_label({
         label: node.id_label()
         ,input: _.id_input
@@ -4050,15 +4050,16 @@ console.log('lib/plugins/classes/classes.js');
 
   _.tree.classes_label.fn({
     edit: function(last) {
+      var _this = _(this);
       if(last) {
-        var last_class = this.last_class();
-        if(last_class.length) return this.edit_class(last_class);
+        var last_class = _this.last_class();
+        if(last_class.length) return _this.edit_class(last_class);
       }
       else {
-        var first_class = this.first_class();
-        if(first_class.length) return this.edit_class(first_class);
+        var first_class = _this.first_class();
+        if(first_class.length) return _this.edit_class(first_class);
       }      
-      return this.new_class();    
+      return _this.new_class();    
     }
   });
   
@@ -4152,11 +4153,12 @@ console.log('lib/plugins/attributes/attributes.js');
     
   _.tree.attributes_label.fn({
     edit: function() {
-      var first_attr = this.attribute_list().find('li:first');
+      var _this = _(this)
+        ,first_attr = _this.attribute_list().find('li:first');
       
-      if(first_attr.length) return this.edit_attr(first_attr);
+      if(first_attr.length) return _this.edit_attr(first_attr);
       
-      return this.new_attr();  
+      return _this.new_attr();  
     }
   });
   
@@ -4384,7 +4386,9 @@ console.log('lib/tree.js');
             if(el.is('input')) return;
             node.blur_all();
             _(options.plugins).each(function() {
-              if(el.hasClass(this)) el[this+'_click'](el, node);
+              if(el.hasClass(this)) 
+                if(el[this+'_click']) 
+                  el[this+'_click'](el, node);
             });
           })
         .mouseover(function(e) {
@@ -4489,7 +4493,7 @@ console.log('lib/tree.js');
     }
     
     ,create_node: function(contents) {
-      var node = this.tree().data('tree.options').node.deep_clone();
+      var node = this.tree().data('tree.options').node.deep_clone(true);
       node.fn('paint', contents);
       this.removeClass('empty');
       this.child_list().append(node);

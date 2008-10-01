@@ -19,7 +19,7 @@
   hide_if_empty: hide the label if the value is ""
   remove_if_empty: remove the label if the value is ""
 */  
-      var node = this.parent_node();
+      var node = _(this).parent_node();
       return node.edit_label({
         label: node.<%= name %>_label()
         ,input: _.tree.<%= name %>_input
