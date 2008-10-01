@@ -509,6 +509,15 @@ console.log('lib/plugins/html_editor/html_editor.js');
     tree.init_tree_plugins(html_editor_plugins, options);
     bind_input_listeners(options);
     tree
+      .dblclick(function() {
+        tree
+          .create_node()
+          .tag_name_label()
+            .fn('edit');
+      })
+      .keybind('esc', function(e) {
+        _(e.target).blur();
+      })
       .keybind('enter', function(e) {
         var node = _(e.target).parent_node();
         node

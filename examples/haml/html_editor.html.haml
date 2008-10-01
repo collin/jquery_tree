@@ -2,24 +2,39 @@
 %html
   %head
     %script{:src => "../pkg/jquery.tree.bundle-#{JQuery::Tree::Version}.js?"}
+    %style
+      :sass
+        .keybindings
+          :border-bottom 1px outset
+          :width 700px
+          li
+            :clear both
+            :border 1px outset
+              :bottom 0
+          dt
+            :font
+              :family serif
+              :size 18px
+            :background-color #fafafa
+            :width 200px
+            :padding 5px
+              :right 10px
+            :text-align right
+            :float left
+          dd
+            :line-height 32px
+            :background white
+            :text-align left
+            :display block
+            :margin-left 230px
+            :font-family sans-serif
+          
     :javascript
       jQuery(function(_) {
         var tree = _('#tree').is_tree({
           plugins: 'html_editor'
         });
-        console.log(tree.data('tree.options'))
-        var awesome = tree.create_node('hella');
-        
-        awesome.create_node({attributes: {ok:'awesome',green:'machine'}});
-        awesome.create_node();
-        awesome.create_node();
-        
-        var set = tree.create_node({id:'set'});
-        set.create_node({classes:['crazy', 'machine']});
-        
-        var subset = set.create_node({tag_name:'ol', id:'subset'});
-        subset.create_node({tag_name:'li'});
-        subset.create_node({tag_name:'li'});
+        tree.create_node({attributes: {ok:'awesome',green:'machine'}});
         
         function notify(msg) {
           return function(e) {
@@ -37,3 +52,43 @@
       });
   %body
     %ol#tree.tree
+      %h4 double click to add a new node
+      %h4 click to edit
+    %dl.keybindings
+      %li
+        %dt tab
+        %dd switch to the next input, tag_name -> id, id -> class, etc
+      %li
+        %dt shift+tab
+        %dd switch in the opposite direction
+      %li
+        %dt enter
+        %dd insert a new element after the current element
+      %li
+        %dt shift+enter
+        %dd insert a new element inside the current element
+      %li
+        %dt ctrl+up
+        %dd switch to the element before the current element
+      %li
+        %dt ctrl+down
+        %dd switch to the element after the current element
+      %li
+        %dt ctrl+left
+        %dd switch to the parent of the current element
+      %li
+        %dt ctrl+right
+        %dd switch to the first child of the current element
+      %li
+        %dt ctrl+shift+up
+        %dd move the current element above its next sibling
+      %li
+        %dt ctrl+shift+down
+        %dd move the current element below its next sibling
+      %li
+        %dt ctrl+shift+left
+        %dd move the current element above its parent
+      %li
+        %dt ctrl+shift+right
+        %dd move the current element above inside its next sibling
+      
