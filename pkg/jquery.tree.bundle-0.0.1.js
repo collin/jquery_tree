@@ -4201,6 +4201,17 @@ console.log('lib/plugins/attributes/attributes.js');
 })(jQuery);
 
 
+console.log('lib/plugins/html_editor/html_editor.js');
+;(function(_) {
+  _.tree.init_html_editor_plugin = function(tree, options) {
+    var html_editor_plugins = 'toggle disable destroy tag_name id classes attributes'.split(/ /);
+    options.plugins = options.plugins.concat(html_editor_plugins);
+    options.node = _.tree.dom_node.deep_clone(true);
+    tree.init_tree_plugins(html_editor_plugins, options);
+  };
+})(jQuery);
+
+
 console.log('lib/bubble_custom_event.js');
 // PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
 ;(function() {
@@ -4324,17 +4335,22 @@ console.log('lib/tree.js');
 
   _.fn.extend({
   
-    is_tree: function(options) {
+    init_tree_plugins: function(plugins, options) {
+      var tree = this;
+      _(plugins).each(function() {
+        _.tree['init_'+this+'_plugin'].call(tree, tree, options);
+      });
+    }
+  
+    ,is_tree: function(options) {
       options = _.extend(defaults(), options);
       options.plugins = options.plugins.split(/ /);
       
       var tree = this;
-      tree.data('tree.options', options)
-      
-      _(options.plugins).each(function() {
-        _.tree['init_'+this+'_plugin'].call(tree, tree, options);
-      });
-      
+      tree
+        .data('tree.options', options)
+        .init_tree_plugins(options.plugins, options);
+           
       return this
         .click(function(e) {
             var el = _(e.target)

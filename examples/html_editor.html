@@ -4,43 +4,38 @@
     <script src='../pkg/jquery.tree.bundle-0.0.1.js?'>    </script>
     <script type='text/javascript'>
       //<![CDATA[
-        ;(function(_) {
-          _(function() {
-            // BAD BAD Javascript example, don't forget your "var"
-            // Or I'll hurt you.
-            _.tree.use_button_plugins('toggle disable destroy');
-            _.tree.use_label_plugins('tag_name id classes attributes');
-            _.tree.node = _.dom_node; 
-            tree = _('#tree').is_tree();
-            
-            awesome = tree.create_node();
-            
-            awesome.create_node({attributes: {ok:'awesome',green:'machine'}});
-            awesome.create_node();
-            awesome.create_node();
-            
-            set = tree.create_node({id:'set'});
-            set.create_node({classes:['crazy', 'machine']});
-            
-            subset = set.create_node({tag_name:'ol', id:'subset'});
-            subset.create_node({tag_name:'li'});
-            subset.create_node({tag_name:'li'});
-            
-            function notify(msg) {
-              return function(e) {
-                console.log(msg, e.target);
-              };
-            }
-            
-            tree.bind('expand', notify('expand'));
-            tree.bind('collapse', notify('collapse'));
-            
-            tree.bind('disable', notify('disable'));
-            tree.bind('enable', notify('enable'));
-            
-            tree.bind('destroy', notify('destroy'));
+        jQuery(function(_) {
+          var tree = _('#tree').is_tree({
+            plugins: 'html_editor'
           });
-        })(jQuery)
+          console.log(tree.data('tree.options'))
+          var awesome = tree.create_node('hella');
+          
+          awesome.create_node({attributes: {ok:'awesome',green:'machine'}});
+          awesome.create_node();
+          awesome.create_node();
+          
+          var set = tree.create_node({id:'set'});
+          set.create_node({classes:['crazy', 'machine']});
+          
+          var subset = set.create_node({tag_name:'ol', id:'subset'});
+          subset.create_node({tag_name:'li'});
+          subset.create_node({tag_name:'li'});
+          
+          function notify(msg) {
+            return function(e) {
+              console.log(msg, e.target);
+            };
+          }
+          
+          tree.bind('expand', notify('expand'));
+          tree.bind('collapse', notify('collapse'));
+          
+          tree.bind('disable', notify('disable'));
+          tree.bind('enable', notify('enable'));
+          
+          tree.bind('destroy', notify('destroy'));
+        });
       //]]>
     </script>
   </head>

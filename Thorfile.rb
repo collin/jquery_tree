@@ -18,6 +18,13 @@ module JQuery
         installer.install :name => name
       end
       
+      desc 'generic_plugin', "Generate a palin generic plugin"
+      def generic_plugin name
+        installer = Basis::Installer.new("#{source_dir}/skeletons/generic_plugin", 
+                                    "#{source_dir}/lib/plugins")
+        installer.install :name => name
+      end
+      
       desc 'label_plugin', "Generate a named skeleton for a label plugin"
       def label_plugin name
         installer = Basis::Installer.new("#{source_dir}/skeletons/label_plugin", 
