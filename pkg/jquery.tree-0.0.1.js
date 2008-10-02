@@ -1,5 +1,5 @@
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:12px;font-family:monospace}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{display:inline}li.tree_node label,li.tree_node input.tag_name{color:blue;font-weight:bold}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node input{border:2px solid black;border-top:0;border-bottom:0;margin:0;padding:0;-moz-border-radius:5px;padding-left:5px;background-color:#fffaaa;font-size:12px;font-family:monospace}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{color:green}li.tree_node ul.classes{display:inline;padding:0;margin:0}li.tree_node ul.classes li{padding:0;margin:0;background:transparent;display:inline}li.tree_node ul.classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node input.attr{color:blue}li.tree_node input.value{color:red}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
+  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:12px;font-family:monospace}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .tree_node input{line-height:20px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{display:inline}li.tree_node label,li.tree_node input.tag_name{color:blue;font-weight:bold}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node input{border:2px solid black;border-top:0;border-bottom:0;margin:0;padding:0;-moz-border-radius:5px;padding-left:5px;background-color:#fffaaa;font-size:12px;font-family:monospace}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{color:green}li.tree_node ul.classes{display:inline;padding:0;margin:0}li.tree_node ul.classes li{padding:0;margin:0;background:transparent;display:inline}li.tree_node ul.classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node input.attr{color:blue}li.tree_node input.value{color:red}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
 }));
 
 if(!jQuery.tree) jQuery.tree = {};
@@ -175,10 +175,15 @@ console.log('lib/plugins/tag_name/tag_name.js');
 
 
 console.log('lib/plugins/dom_node/dom_node.js');
-//jQuery.tree.node = jQuery.dom_node;
 ;(function(_) {
   _.tree.dom_node.fn({
-    paint: function(data) {
+    edit: function() {
+      var _this = _(this);
+      _this.tag_name_label().fn('edit');
+      return _this;
+    }
+    
+    ,paint: function(data) {
       var _this = _(this)
         ,defaults = _.extend({}, {
           tag_name: 'div'
@@ -508,76 +513,7 @@ console.log('lib/plugins/html_editor/html_editor.js');
     options.node = _.tree.dom_node.deep_clone(true);
     tree.init_tree_plugins(html_editor_plugins, options);
     bind_input_listeners(options);
-    tree
-      .dblclick(function() {
-        tree
-          .create_node()
-          .tag_name_label()
-            .fn('edit');
-      })
-      .keybind('esc', function(e) {
-        _(e.target).blur();
-      })
-      .keybind('enter', function(e) {
-        var node = _(e.target).parent_node();
-        node
-          .create_node_after()
-          .tag_name_label()
-            .fn('edit');
-      })
-      .keybind('shift+enter', function(e) {
-        var node = _(e.target).parent_node();
-        node
-          .create_node()
-          .tag_name_label()
-            .fn('edit');
-      })
-      .keybind('ctrl+up', function(e) {
-        var input = _(e.target)
-          ,node = input.parent_node();
-        node.prev('li').find('.element:first .'+input.attr('class')).fn('edit');
-      })
-      .keybind('ctrl+down', function(e) {
-        var input = _(e.target)
-          ,node = input.parent_node();
-        node.next('li').find('.element:first .'+input.attr('class')).fn('edit');
-      })
-      .keybind('ctrl+left', function(e) {
-        var input = _(e.target)
-          ,node = input.parent_node();
-        node.parent_node().find('.element:first .'+input.attr('class')).fn('edit');
-      })
-      .keybind('ctrl+right', function(e) {
-        var input = _(e.target)
-          ,node = input.parent_node();
-        node.child_list().find('li:first').find('.element:first .'+input.attr('class')).fn('edit');
-      })
-      .keybind('ctrl+shift+up', function(e) {
-        var input = _(e.target)
-          ,node = input.parent_node();
-        node.prev('li').before(node);
-        input.focus();
-      })
-      .keybind('ctrl+shift+down', function(e) {
-        var input = _(e.target)
-          ,node = input.parent_node();
-        node.next('li').after(node);
-        input.focus();
-      })
-      .keybind('ctrl+shift+left', function(e) {
-        var input = _(e.target)
-          ,node = input.parent_node();
-        node.parent_node().before(node);
-        input.focus();
-        if(node.parent_node().child_list().blank()) parent_node.addClass('empty');
-      })
-      .keybind('ctrl+shift+right', function(e) {
-        var input = _(e.target)
-          ,node = input.parent_node();
-        node.next().child_list().prepend(node);
-        input.focus();
-        node.next().removeClass('blank');
-      });
+    tree.interactive_editing();
   };
 })(jQuery);
 
@@ -620,7 +556,39 @@ $
 
 console.log('lib/plugins/editable/editable.js');
 ;(function(_) {
-  _.tree.tree_node.label()
+  _.fn.interactive_editing = function() {
+    return this
+      .dblclick(function() {
+        _(this)
+          .create_node()
+            .fn('edit');
+      })
+      .keybind('esc', function(e) {
+        _(e.target).blur();
+      })
+      .keybind('enter', node_insert_and_edit('create_node_after'))
+      .keybind('shift+enter', node_insert_and_edit('create_node'))
+      .keybind('ctrl+up', navigate('prev', 'li'))
+      .keybind('ctrl+down', navigate('next', 'li'))
+      .keybind('ctrl+left', navigate('parent_node'))
+      .keybind('ctrl+right', navigate('child_list'))
+      .keybind('ctrl+shift+up', node_and_focus_input(function(node, input) {
+        node.prev('li').before(node);
+      }))
+      .keybind('ctrl+shift+down', node_and_focus_input(function(node, input) {
+        node.next('li').after(node);
+      }))
+      .keybind('ctrl+shift+left', node_and_focus_input(function(node, input) {
+        node.parent_node().before(node);
+        if(node.parent_node().child_list().blank()) node.parent_node().addClass('empty');
+      }))
+      .keybind('ctrl+shift+right', node_and_focus_input(function(node, input) {
+        node.next().child_list().prepend(node);
+        node.next().removeClass('empty');
+      }));
+  };
+
+  _.tree.tree_node.children('span')
     .fn({
       edit: function() {
         var node = _(this).parent_node();
@@ -642,8 +610,42 @@ console.log('lib/plugins/editable/editable.js');
     .keypress_size_to_fit()
 
   _.tree.init_editable_plugin = function(tree, options) {
+    tree.interactive_editing();
     options.tree_node_input = _.tree.tree_node_input.deep_clone(true);
   };
+  
+  function node_insert_and_edit(insertion_method) {
+    return function(e) {
+      var node = _(e.target).parent_node();
+      node[insertion_method]().fn('edit');
+    }
+  }
+  
+  function node_and_input(fn) {
+    return function(e) {
+      var input = _(e.target)
+        ,node = input.parent_node();
+      fn(node, input, e);
+    } 
+  }
+  
+  function node_and_focus_input(fn) {
+    return node_and_input(function(node, input, e) {
+      fn(node, input, e);
+      input.focus();
+    });
+  }
+  
+  function navigate() {
+    var method = [].shift.apply(arguments)
+      ,args = arguments;
+      
+    return node_and_input(function(node, input) {
+      _.fn[method].apply(node, args)
+        .find('.element:first .'+input.attr('class'))
+        .fn('edit');
+    });
+  }
 })(jQuery);
 
 
@@ -754,7 +756,13 @@ console.warn('PATCHED bubble custom event')
 console.log('lib/tree.js');
 ;(function(_){
   _.tree.tree_node.fn({
-    paint: function(label) {
+    edit: function() {
+      var _this = _(this);
+      _this.label().fn('edit');
+      return _this;
+    }
+    
+    ,paint: function(label) {
       return _(this).label().html(label);
     }
   });
@@ -767,7 +775,7 @@ console.log('lib/tree.js');
   }
 
   var inspection_class = 'inspected';
-console.log("CKC")
+
   _.fn.extend({
     init_tree_plugins: function(plugins, options) {
       var tree = this;
@@ -875,6 +883,7 @@ console.log("CKC")
             }
             else if(opts.if_empty) {
               label
+                .show()
                 .html(input.val())
                 .if_empty(opts.if_empty);
             }
