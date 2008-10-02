@@ -6,7 +6,9 @@
       //<![CDATA[
         ;(function(_) {
           _(function() {
-            var tree = _('#tree').is_tree();
+            var tree = _('#tree').is_tree({
+              plugins: 'editable'
+            });
             
             var awesome = tree.create_node('Awesome');
             

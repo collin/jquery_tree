@@ -36,6 +36,8 @@ jQuery.tree.attr_input = jQuery("<input class='attr' type='text' />");
 
 jQuery.tree.value_input = jQuery("<input class='value' type='text' />");
 
+jQuery.tree.tree_node_input = jQuery("<input class='tree_node' type='text' />");
+
 console.log('lib/plugins/toggle/toggle.js');
 ;(function(_) {
   var closed_class = 'closed'
@@ -151,7 +153,6 @@ console.log('lib/plugins/tag_name/tag_name.js');
   _.tree.init_tag_name_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.tag_name_label.deep_clone(true));
     options.tag_name_input = _.tree.tag_name_input.clone(true);
-    _(document.body).append(_.tree.tag_name_input);
   }
   
   _.tree.tag_name_label.fn({
@@ -213,7 +214,6 @@ console.log('lib/plugins/id/id.js');
   _.tree.init_id_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.id_label.deep_clone(true));
     options.id_input = _.tree.id_input.clone(true);
-    _(document.body).append(_.tree.id_input);
   };
 
   _.tree.id_label.fn({
@@ -267,7 +267,6 @@ console.log('lib/plugins/classes/classes.js');
   _.tree.init_classes_plugin = function(tree, options) {
     options.node.find('.element').append(_.tree.classes_label.deep_clone(true));
     options.classes_input = _.tree.classes_input.clone(true);
-    _(document.body).append(_.tree.classes_input);
   };
 
   _.tree.classes_label.fn({
@@ -370,9 +369,9 @@ console.log('lib/plugins/attributes/attributes.js');
   });
  
   function edit_value() { 
-      var _this = _(this);
-      _this.parent_node().edit_value(_this.parent());
-    }
+    var _this = _(this);
+    _this.parent_node().edit_value(_this.parent());
+  }
  
   _.tree.attr_input
     .hide()
@@ -402,7 +401,6 @@ console.log('lib/plugins/attributes/attributes.js');
     options.node.find('.element').append(_.tree.attributes_label.deep_clone(true));
     options.attr_input = _.tree.attr_input.clone(true);
     options.value_input = _.tree.value_input.clone(true);
-    _(document.body).append(_.tree.attributes_input);
   };
     
   _.tree.attributes_label.fn({
@@ -502,6 +500,8 @@ console.log('lib/plugins/html_editor/html_editor.js');
     }
   }
 
+  _.tree.elements = "A,ABBR,ACRONYM,ADDRESS,APPLET,AREA,B,BASE, BASEFONT,BDO,BIG,BLOCKQUOTE,BODY,BR,BUTTON,CAPTION,CENTER,CITE,CODE,COL, COLGROUP,DD,DEL,DFN,DIR,DIV,DL,DT,EM, FIELDSET,FONT,FORM,FRAME, FRAMESET,H1,H2,H3,H4,H5,H6,HEAD,HR,HTML,I,IFRAME,IMG,INPUT,INS,ISINDEX,KBD,LABEL,LEGEND,LI,LINK,MAP,MENU,META, NOFRAMES, NOSCRIPT,OBJECT,OL, OPTGROUP,OPTION,P,PARAM,PRE,Q,S,SAMP,SCRIPT,SELECT,SMALL,SPAN,STRIKE,STRONG,STYLE,SUB,SUP,TABLE,TBODY,TD, TEXTAREA,TFOOT,TH,THEAD,TITLE,TR,TT,U,UL,VAR".toLowerCase().split(',')
+
   _.tree.init_html_editor_plugin = function(tree, options) {
     var html_editor_plugins = 'toggle disable destroy tag_name id classes attributes'.split(/ /);
     options.plugins = options.plugins.concat(html_editor_plugins);
@@ -578,6 +578,71 @@ console.log('lib/plugins/html_editor/html_editor.js');
         input.focus();
         node.next().removeClass('blank');
       });
+  };
+})(jQuery);
+
+
+console.log('lib/plugins/code_editor/code_editor.js');
+/*
+
+a = 1
+b = 3
+
+for simple codez like this:
+operands
+  ==, ===, !==, ||, &&, +, -, *
+assignment
+  =
+if
+unless
+else
+objects in scope
+fun() {}
+def
+dot.access
+.implied_access
+#{interpolation} -> .#{}
+@ttributes
+&
+:events
+= fall through javascript?
+- eval javascript?
+$
+
+*/
+
+;(function(_) {
+  _.tree.init_code_editor_plugin = function(tree, options) {
+  
+  };
+})(jQuery);
+
+
+console.log('lib/plugins/editable/editable.js');
+;(function(_) {
+  _.tree.tree_node.label()
+    .fn({
+      edit: function() {
+        var node = _(this).parent_node();
+        node.edit_label({
+          label: node.label()
+          ,input: node.tree().data('tree.options').tree_node_input
+          ,if_empty: function() {
+            node.remove();  
+          }
+        });
+      }
+    })
+    .click(function(e) {
+      _(this).fn('edit');
+    });
+
+  _.tree.tree_node_input
+    .hide()
+    .keypress_size_to_fit()
+
+  _.tree.init_editable_plugin = function(tree, options) {
+    options.tree_node_input = _.tree.tree_node_input.deep_clone(true);
   };
 })(jQuery);
 
@@ -690,7 +755,7 @@ console.log('lib/tree.js');
 ;(function(_){
   _.tree.tree_node.fn({
     paint: function(label) {
-      return _(this).find('span:first').html(label);
+      return _(this).label().html(label);
     }
   });
 
@@ -702,14 +767,17 @@ console.log('lib/tree.js');
   }
 
   var inspection_class = 'inspected';
-
+console.log("CKC")
   _.fn.extend({
-  
     init_tree_plugins: function(plugins, options) {
       var tree = this;
       _(plugins).each(function() {
         _.tree['init_'+this+'_plugin'].call(tree, tree, options);
       });
+    }
+  
+    ,label: function() {
+      return this.children('span:first');
     }
   
     ,is_tree: function(options) {
