@@ -4,7 +4,7 @@
 
 if(!jQuery.tree) jQuery.tree = {};
 
-jQuery.tree.tree_node = jQuery("<li class='tree_node empty'>  <span></span>  <ol></ol></li>");
+jQuery.tree.tree_node = jQuery("<li class='tree_node empty'>  <span class='label'></span>  <ol></ol></li>");
 
 jQuery.tree.toggle_button = jQuery("<button class='toggle'></button>");
 
@@ -37,6 +37,8 @@ jQuery.tree.attr_input = jQuery("<input class='attr' type='text' />");
 jQuery.tree.value_input = jQuery("<input class='value' type='text' />");
 
 jQuery.tree.tree_node_input = jQuery("<input class='tree_node' type='text' />");
+
+jQuery.tree.tree_node_input = jQuery("<input class='label' type='text' />");
 
 console.log('lib/plugins/toggle/toggle.js');
 ;(function(_) {
@@ -513,7 +515,7 @@ console.log('lib/plugins/html_editor/html_editor.js');
     options.node = _.tree.dom_node.deep_clone(true);
     tree.init_tree_plugins(html_editor_plugins, options);
     bind_input_listeners(options);
-    tree.interactive_editing();
+    tree.interactive_editing('.element:first');
   };
 })(jQuery);
 
@@ -556,7 +558,19 @@ $
 
 console.log('lib/plugins/editable/editable.js');
 ;(function(_) {
-  _.fn.interactive_editing = function() {
+  _.fn.interactive_editing = function(navigation_selector) {
+  
+    function navigate() {
+      var method = [].shift.apply(arguments)
+        ,args = arguments;
+        
+      return node_and_input(function(node, input) {
+        _.fn[method].apply(node, args)
+          .find(navigation_selector||''+' .'+input.attr('class')+':first')
+          .fn('edit');
+      });
+    }
+  
     return this
       .dblclick(function() {
         _(this)
@@ -633,17 +647,6 @@ console.log('lib/plugins/editable/editable.js');
     return node_and_input(function(node, input, e) {
       fn(node, input, e);
       input.focus();
-    });
-  }
-  
-  function navigate() {
-    var method = [].shift.apply(arguments)
-      ,args = arguments;
-      
-    return node_and_input(function(node, input) {
-      _.fn[method].apply(node, args)
-        .find('.element:first .'+input.attr('class'))
-        .fn('edit');
     });
   }
 })(jQuery);
