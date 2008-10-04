@@ -11,7 +11,7 @@
     .keybind('shift+tab', function() { _(this).prev().prev().fn('edit'); });
   
   _.tree.init_<%= name %>_plugin = function(tree, options) {
-    options.node.find('.element').append(_.tree.<%= name %>_label.deep_clone(true));
+    options.node.<%= node_type %>.find('.element').append(_.tree.<%= name %>_label.deep_clone(true));
     options.<%= name %>_input = _.tree.<%= name %>_input.clone(true);
   };
   

@@ -36,7 +36,13 @@ module JQuery
         puts "provide a canonical selector for this label, from a li.tree_node context"
         selector = gets.chomp
         
-        installer.install :name => name, :element => element, :selector => selector
+        puts "provide a the type of tree node this label appears in"
+        selector = gets.chomp
+        
+        installer.install :name => name, 
+          :element => element, 
+          :selector => selector,
+          :node_type => node_type
       end
     end
   end

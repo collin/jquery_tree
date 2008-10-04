@@ -3669,8 +3669,17 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
       return this;
     }
     
-    ,log: function() {
-      console.log(this[0]);
+    ,replace: function(replacement) {
+      return this.map(function() {
+        _(this)
+          .after(replacement)
+          .remove();
+        return this;
+      });
+    }
+    
+    ,log: function(msg) {
+      console.log(this[0], msg);
       return this;
     }
   });
@@ -3774,7 +3783,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
           if(_.special_keys[e.keyCode]) key = _.special_keys[e.keyCode];        
           else if(e.keyCode == 188) key=","; //If the user presses , when the type is onkeydown
 			    else if(e.keyCode == 190) key="."; //If the user presses , when the type is onkeydown
-          else if(e.charCode != 0) key = String.fromCharCode(e.charCode); 
+          else if(e.which != 0) key = String.fromCharCode(e.which); 
           
           for(binding in bindings) {
             presses = 0;
@@ -3784,21 +3793,33 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
               // false if the modifier is wanted, but it isn't given
               if(binding.match(this) !== null) modified = e[this+"Key"];
               if(e[this+"Key"]) presses++;
-              //console.log(binding.match(this) !== null, this, binding, modified, e[this+"Key"])
             });
             keys = binding.replace(/shift|ctrl|alt|meta/, '').split(/\++/);
             matched = false;
             _(keys).each(function() {
-              if(this !== "") 
+              if(this !== "") {
                 if(this == key) {
                   matched = true;
                   presses++;
                 }
+              }
             });
-            if(modified && matched && presses === requested_presses) {
+            function execute() {
               bindings[binding].call(this, e);
               e.preventDefault();
+            }
+            if(modified && matched && presses === requested_presses) {
+              execute();
               break;
+            }
+            else {
+              _(keys).each(function() {
+                if(this !== "") {
+                  if(this == _.shift_nums[key]) {
+                    execute.call(this);
+                  }
+                }
+              });
             }
           }
         });
@@ -3810,7 +3831,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
 
 
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:12px;font-family:monospace}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree .tree_node input{line-height:20px}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{display:inline}li.tree_node label,li.tree_node input.tag_name{color:blue;font-weight:bold}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node input{border:2px solid black;border-top:0;border-bottom:0;margin:0;padding:0;-moz-border-radius:5px;padding-left:5px;background-color:#fffaaa;font-size:12px;font-family:monospace}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{color:green}li.tree_node ul.classes{display:inline;padding:0;margin:0}li.tree_node ul.classes li{padding:0;margin:0;background:transparent;display:inline}li.tree_node ul.classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node input.attr{color:blue}li.tree_node input.value{color:red}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
+  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:12px;font-family:monospace}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree input{border:2px solid black;border-top:0;border-bottom:0;margin:0;padding:0;-moz-border-radius:5px;padding-left:5px;background-color:#fffaaa;font-size:12px;font-family:monospace}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{display:inline}li.tree_node label,li.tree_node input.tag_name{color:blue;font-weight:bold}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{color:green}li.tree_node ul.classes{display:inline;padding:0;margin:0}li.tree_node ul.classes li{padding:0;margin:0;background:transparent;display:inline}li.tree_node ul.classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node input.attr{color:blue}li.tree_node input.value{color:red}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
 }));
 
 if(!jQuery.tree) jQuery.tree = {};
@@ -3858,9 +3879,11 @@ console.log('lib/plugins/toggle/toggle.js');
     ,collapse_event = 'collapse';
   _.tree.animate = true;
   
-  
   _.tree.init_toggle_plugin = function(tree, options) {
-    options.node.prepend(_.tree.toggle_button.deep_clone(true));
+    var slot;
+    for(slot in options.node)
+      options.node[slot].prepend(_.tree.toggle_button.deep_clone(true));
+    return this;
   };
   
   _.fn.extend({
@@ -3907,7 +3930,10 @@ console.log('lib/plugins/disable/disable.js');
     ,enable_event = 'enable';
   
   _.tree.init_disable_plugin = function(tree, options) {
-    options.node.prepend(_.tree.disable_button.deep_clone(true));
+    var slot;
+    for(slot in options.node)
+      options.node[slot].prepend(_.tree.disable_button.deep_clone(true));
+    return this;
   };
   
   _.fn.extend({
@@ -3935,7 +3961,10 @@ console.log('lib/plugins/destroy/destroy.js');
   var destroy_event = 'destroy'
 
   _.tree.init_destroy_plugin = function(tree, options) {
-    options.node.prepend(_.tree.destroy_button.deep_clone(true));
+    var slot;
+    for(slot in options.node)
+      options.node[slot].prepend(_.tree.destroy_button.deep_clone(true));
+    return this;
   };
   
   _.fn.extend({
@@ -3964,7 +3993,7 @@ console.log('lib/plugins/tag_name/tag_name.js');
     .keybind('shift+tab', function() { _(this).prev().fn('edit'); });
   
   _.tree.init_tag_name_plugin = function(tree, options) {
-    options.node.find('.element').append(_.tree.tag_name_label.deep_clone(true));
+    options.node.dom.find('.element').append(_.tree.tag_name_label.deep_clone(true));
     options.tag_name_input = _.tree.tag_name_input.clone(true);
   }
   
@@ -4004,6 +4033,8 @@ console.log('lib/plugins/dom_node/dom_node.js');
         })
         ,data = _.extend(defaults, data);
       
+      //if(_this.child_list().children().length) _this.remove_class('empty');
+      
       _this.tag_name_label().html(data.tag_name);
       _this.id_label().html(data.id).hide_if_empty();
       if(data.classes)
@@ -4030,7 +4061,7 @@ console.log('lib/plugins/id/id.js');
     .keybind('shift+tab', function() { _(this).prev().prev().fn('edit'); });
   
   _.tree.init_id_plugin = function(tree, options) {
-    options.node.find('.element').append(_.tree.id_label.deep_clone(true));
+    options.node.dom.find('.element').append(_.tree.id_label.deep_clone(true));
     options.id_input = _.tree.id_input.clone(true);
   };
 
@@ -4083,7 +4114,7 @@ console.log('lib/plugins/classes/classes.js');
     });
       
   _.tree.init_classes_plugin = function(tree, options) {
-    options.node.find('.element').append(_.tree.classes_label.deep_clone(true));
+    options.node.dom.find('.element').append(_.tree.classes_label.deep_clone(true));
     options.classes_input = _.tree.classes_input.clone(true);
   };
 
@@ -4216,7 +4247,7 @@ console.log('lib/plugins/attributes/attributes.js');
     });
   
   _.tree.init_attributes_plugin = function(tree, options) {
-    options.node.find('.element').append(_.tree.attributes_label.deep_clone(true));
+    options.node.dom.find('.element').append(_.tree.attributes_label.deep_clone(true));
     options.attr_input = _.tree.attr_input.clone(true);
     options.value_input = _.tree.value_input.clone(true);
   };
@@ -4321,12 +4352,14 @@ console.log('lib/plugins/html_editor/html_editor.js');
   _.tree.elements = "A,ABBR,ACRONYM,ADDRESS,APPLET,AREA,B,BASE, BASEFONT,BDO,BIG,BLOCKQUOTE,BODY,BR,BUTTON,CAPTION,CENTER,CITE,CODE,COL, COLGROUP,DD,DEL,DFN,DIR,DIV,DL,DT,EM, FIELDSET,FONT,FORM,FRAME, FRAMESET,H1,H2,H3,H4,H5,H6,HEAD,HR,HTML,I,IFRAME,IMG,INPUT,INS,ISINDEX,KBD,LABEL,LEGEND,LI,LINK,MAP,MENU,META, NOFRAMES, NOSCRIPT,OBJECT,OL, OPTGROUP,OPTION,P,PARAM,PRE,Q,S,SAMP,SCRIPT,SELECT,SMALL,SPAN,STRIKE,STRONG,STYLE,SUB,SUP,TABLE,TBODY,TD, TEXTAREA,TFOOT,TH,THEAD,TITLE,TR,TT,U,UL,VAR".toLowerCase().split(',')
 
   _.tree.init_html_editor_plugin = function(tree, options) {
-    var html_editor_plugins = 'toggle disable destroy tag_name id classes attributes'.split(/ /);
+    var html_editor_plugins = 'tag_name id classes attributes'.split(/ /);
     options.plugins = options.plugins.concat(html_editor_plugins);
-    options.node = _.tree.dom_node.deep_clone(true);
+    options.node.dom = _.tree.dom_node.deep_clone(true);
     tree.init_tree_plugins(html_editor_plugins, options);
     bind_input_listeners(options);
-    tree.interactive_editing('.element:first');
+    tree.interactive_editing({
+      navigation_selector: '.element:first'
+    });
   };
 })(jQuery);
 
@@ -4369,16 +4402,24 @@ $
 
 console.log('lib/plugins/editable/editable.js');
 ;(function(_) {
-  _.fn.interactive_editing = function(navigation_selector) {
+  _.fn.interactive_editing = function(options) {
+  
+    var options = _.extend({
+      navigation_selector: ''
+      ,default_node_type: undefined
+    }, options);
   
     function navigate() {
       var method = [].shift.apply(arguments)
         ,args = arguments;
         
       return node_and_input(function(node, input) {
-        _.fn[method].apply(node, args)
-          .find(navigation_selector||''+' .'+input.attr('class')+':first')
-          .fn('edit');
+        var found = _.fn[method].apply(node, args)
+          ,label;
+        if(found.is('ol')) found = found.children('.tree_node:first');
+        label = found.find(options.navigation_selector+':first .'+input.attr('class')+':first')
+        if(label.length) label.fn('edit');
+        else found.fn('edit');
       });
     }
   
@@ -4435,7 +4476,7 @@ console.log('lib/plugins/editable/editable.js');
     .keypress_size_to_fit()
 
   _.tree.init_editable_plugin = function(tree, options) {
-    tree.interactive_editing();
+    tree.interactive_editing( );
     options.tree_node_input = _.tree.tree_node_input.deep_clone(true);
   };
   
@@ -4581,9 +4622,11 @@ console.log('lib/tree.js');
     }
   });
 
-  function defaults() {     
+  function defaults() {
     return {
-      node: _.tree.tree_node.deep_clone(true)
+      node: {
+        basic: _.tree.tree_node.deep_clone(true)
+      }
       ,plugins: ''
     };    
   }
@@ -4741,8 +4784,9 @@ console.log('lib/tree.js');
       return node;
     }
     
-    ,_create_node: function(contents) {
-      var node = this.tree().data('tree.options').node.deep_clone(true);
+    ,_create_node: function(contents, type) {
+      if(!type) type = 'basic'
+      var node = this.tree().data('tree.options').node[type].deep_clone(true);
       node.fn('paint', contents);
       return node;
     }

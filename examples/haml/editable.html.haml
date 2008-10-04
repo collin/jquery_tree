@@ -6,7 +6,15 @@
       ;(function(_) {
         _(function() {
           var tree = _('#tree').is_tree({
-            plugins: 'editable'
+            plugins: 'html_editor editable toggle disable destroy'
+          });
+          
+          tree.keybind('<', function(e) {
+            var node = _(e.target).parent_node();
+            var tag = node.tree().data('tree.options').node.dom.deep_clone(true);
+            tag.child_list().replace(node.child_list())
+            node.replace(tag)
+            tag.fn('paint');
           });
           
           var awesome = tree.create_node('Awesome');

@@ -118,8 +118,17 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
       return this;
     }
     
-    ,log: function() {
-      console.log(this[0]);
+    ,replace: function(replacement) {
+      return this.map(function() {
+        _(this)
+          .after(replacement)
+          .remove();
+        return this;
+      });
+    }
+    
+    ,log: function(msg) {
+      console.log(this[0], msg);
       return this;
     }
   });
@@ -223,7 +232,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
           if(_.special_keys[e.keyCode]) key = _.special_keys[e.keyCode];        
           else if(e.keyCode == 188) key=","; //If the user presses , when the type is onkeydown
 			    else if(e.keyCode == 190) key="."; //If the user presses , when the type is onkeydown
-          else if(e.charCode != 0) key = String.fromCharCode(e.charCode); 
+          else if(e.which != 0) key = String.fromCharCode(e.which); 
           
           for(binding in bindings) {
             presses = 0;
@@ -233,21 +242,33 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
               // false if the modifier is wanted, but it isn't given
               if(binding.match(this) !== null) modified = e[this+"Key"];
               if(e[this+"Key"]) presses++;
-              //console.log(binding.match(this) !== null, this, binding, modified, e[this+"Key"])
             });
             keys = binding.replace(/shift|ctrl|alt|meta/, '').split(/\++/);
             matched = false;
             _(keys).each(function() {
-              if(this !== "") 
+              if(this !== "") {
                 if(this == key) {
                   matched = true;
                   presses++;
                 }
+              }
             });
-            if(modified && matched && presses === requested_presses) {
+            function execute() {
               bindings[binding].call(this, e);
               e.preventDefault();
+            }
+            if(modified && matched && presses === requested_presses) {
+              execute();
               break;
+            }
+            else {
+              _(keys).each(function() {
+                if(this !== "") {
+                  if(this == _.shift_nums[key]) {
+                    execute.call(this);
+                  }
+                }
+              });
             }
           }
         });

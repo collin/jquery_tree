@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 
-raise "YOU NEED A GEM: gem install collin-continuous_builder" unless require 'continuous_builder'
-raise "YOU NEED A GEM: gem install haml" unless require 'haml'
+require 'continuous_builder'
+require 'haml'
 
 require 'sass'
 require 'sass/plugin'
@@ -35,6 +35,20 @@ module JQuery
         :files => Root/'lib'/'**'/'*{.css,.js,.html}',
         :update => :build_embedded,
         :wait_for_all_edits => true
+      
+      watches :vendor,
+        :files => Root/'vendor'/'**'/'*.js',
+          :update => :build_embedded,
+          :wait_for_all_edits => true
+=begin loop of death      
+      watches :self, 
+        :files => Root/'script'/'build',
+        :update => :reload_builder
+=end
+      
+      def reload_builder path
+        load __FILE__
+      end
       
       def build_embedded path
         scripts = []
