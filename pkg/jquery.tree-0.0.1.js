@@ -154,9 +154,17 @@ console.log('lib/plugins/tag_name/tag_name.js');
     _(this).fn('edit');
   });
   
+  jQuery.fn.whitelist = function(expr) {
+    return this.keypress(function(e) {
+      if( e.charCode > 0 
+      && !String.fromCharCode(e.which).match(expr)) e.preventDefault();
+    })
+  }
+  
   _.tree.tag_name_input
     .hide()
     .keypress_size_to_fit()
+    .whitelist(/[a-z]/)
     .keybind('tab',      function() { _(this).next().fn('edit'); })
     .keybind('shift+tab', function() { _(this).prev().fn('edit'); });
   
@@ -172,6 +180,13 @@ console.log('lib/plugins/tag_name/tag_name.js');
         label: node.tag_name_label()
         ,input: node.tree().data('tree.options').tag_name_input
         ,default_value: 'div'
+        ,commit: function(options) {
+          var _this = _(this);
+          if(!_this.val().match(_.tree.tag_names_regex)) {
+            console.warn(_this.val(), "is not a valid tag name");
+            _this.val(options.default_value);
+          }
+        }
       });
     }
   });
@@ -181,6 +196,9 @@ console.log('lib/plugins/tag_name/tag_name.js');
       return this.find('label:first');
     }
   });
+  
+  _.tree.tag_names = "A,ABBR,ACRONYM,ADDRESS,APPLET,AREA,B,BASE, BASEFONT,BDO,BIG,BLOCKQUOTE,BODY,BR,BUTTON,CAPTION,CENTER,CITE,CODE,COL, COLGROUP,DD,DEL,DFN,DIR,DIV,DL,DT,EM,FIELDSET,FONT,FORM,FRAME, FRAMESET,H1,H2,H3,H4,H5,H6,HEAD,HR,HTML,I,IFRAME,IMG,INPUT,INS,ISINDEX,KBD,LABEL,LEGEND,LI,LINK,MAP,MENU,META, NOFRAMES, NOSCRIPT,OBJECT,OL, OPTGROUP,OPTION,P,PARAM,PRE,Q,S,SAMP,SCRIPT,SELECT,SMALL,SPAN,STRIKE,STRONG,STYLE,SUB,SUP,TABLE,TBODY,TD, TEXTAREA,TFOOT,TH,THEAD,TITLE,TR,TT,U,UL,VAR".toLowerCase().split(',');
+  _.tree.tag_names_regex = new RegExp('^('+_.tree.tag_names.join('|')+')$');
 })(jQuery);
 
 
@@ -225,6 +243,7 @@ console.log('lib/plugins/id/id.js');
   _.tree.id_input
     .hide()
     .keypress_size_to_fit()
+    .whitelist(/[a-z-_\d]/)
     .keybind('tab',      function() { _(this).next().fn('edit'); })
     .keybind('shift+tab', function() { _(this).prev().prev().fn('edit'); });
   
@@ -272,6 +291,7 @@ console.log('lib/plugins/classes/classes.js');
   _.tree.classes_input
     .hide()
     .keypress_size_to_fit()
+    .whitelist(/[a-z-_\d]/)
     .keybind('tab', function() { 
       var _this = _(this);
       _this.parent().next_class(_this.prev());
@@ -340,7 +360,7 @@ console.log('lib/plugins/classes/classes.js');
     ,next_class: function(cls) {
       var next = cls.next().next();
       if(next.length) return this.edit_class(next);
-      return this.next().log().fn('edit');
+      return this.next().fn('edit');
     }
   
     ,class_string: function() {
@@ -392,6 +412,7 @@ console.log('lib/plugins/attributes/attributes.js');
  
   _.tree.attr_input
     .hide()
+    .whitelist(/[a-z-_]/)
     .keypress_size_to_fit()
     .keybind('tab', edit_value)
     .keybind('shift+tab', function() { 
@@ -451,7 +472,7 @@ console.log('lib/plugins/attributes/attributes.js');
     ,next_attr: function(attr) {
       var next = attr.parent().next('li');
       if(next.length) return this.edit_attr(next);
-      return this.new_attr();
+      return this.attribute_list().new_attr();
     }
     
     ,edit_attr: function(label) {
@@ -477,7 +498,7 @@ console.log('lib/plugins/attributes/attributes.js');
       var attrs = {} 
       
       _(this[0].attributes).each(function(which, attr) {
-        if(!this.name.match(/id|class/)) {
+        if(!this.name.match(/^(id|class)$/)) {
           attrs[this.name] = this.value;
         }
       });
@@ -517,7 +538,6 @@ console.log('lib/plugins/html_editor/html_editor.js');
     }
   }
 
-  _.tree.elements = "A,ABBR,ACRONYM,ADDRESS,APPLET,AREA,B,BASE, BASEFONT,BDO,BIG,BLOCKQUOTE,BODY,BR,BUTTON,CAPTION,CENTER,CITE,CODE,COL, COLGROUP,DD,DEL,DFN,DIR,DIV,DL,DT,EM, FIELDSET,FONT,FORM,FRAME, FRAMESET,H1,H2,H3,H4,H5,H6,HEAD,HR,HTML,I,IFRAME,IMG,INPUT,INS,ISINDEX,KBD,LABEL,LEGEND,LI,LINK,MAP,MENU,META, NOFRAMES, NOSCRIPT,OBJECT,OL, OPTGROUP,OPTION,P,PARAM,PRE,Q,S,SAMP,SCRIPT,SELECT,SMALL,SPAN,STRIKE,STRONG,STYLE,SUB,SUP,TABLE,TBODY,TD, TEXTAREA,TFOOT,TH,THEAD,TITLE,TR,TT,U,UL,VAR".toLowerCase().split(',')
 
   _.tree.init_html_editor_plugin = function(tree, options) {
     var html_editor_plugins = 'tag_name id classes attributes'.split(/ /);
@@ -669,6 +689,76 @@ console.log('lib/plugins/editable/editable.js');
       input.focus();
     });
   }
+  
+  _.fn.extend({
+/*
+  label: the jqueried label
+  input: the jqueried input elment
+
+  insertion_method: method to insert the input: 'append', 'before', etc.
+    defaults to 'after'
+  do_not_hide_label: keep the label around so it's css will apply
+  default_value: set the label to this if the value is ""
+  hide_if_empty: hide the label if the value is ""
+  remove_if_empty: remove the label if the value is ""
+*/
+    edit_label: function(opts) {
+      var label = opts.label
+        ,input = opts.input;
+
+      _(document.body).blur_all();
+      input.val(label.text());
+      
+      if(opts.do_not_hide_label) label.clear().css('display', '');
+      else label.hide();
+      
+      label[opts.insertion_method || 'after'](input.show());
+      
+      input
+        .size_to_fit()
+        .one('blur', function() {
+          opts.commit && opts.commit.call(this, opts);
+          
+          if(opts.complete) {        
+            _(document.body).append(input.hide());
+            opts.complete();
+          }
+          else {
+            _(document.body).append(input.hide());
+            if(opts.default_value) {
+              label
+                .html(input.val() || opts.default_value)
+                .show();
+            }
+            else if(opts.hide_if_empty) {      
+              label
+                .html(input.val())
+                .hide_if_empty();
+            }
+            else if(opts.remove_if_empty) {
+              label
+                .html(input.val())
+                .remove_if_empty();
+            }
+            else if(opts.if_empty) {
+              label
+                .show()
+                .html(input.val())
+                .if_empty(opts.if_empty);
+            }
+            else {
+              label.html(input.val());
+            }
+          }
+        });
+      
+      label.parent().length && opts.success && opts.success.call(label);
+      
+      setTimeout(function(){input.focus();}, 1);
+      return this;
+    }
+  })
+  
 })(jQuery);
 
 
@@ -857,71 +947,6 @@ console.log('lib/tree.js');
       var node = this.parents('.tree_node:first');
       if(node.length) return node;
       return this.filter('.tree_node');
-    }
-    
-/*
-  label: the jqueried label
-  input: the jqueried input elment
-
-  insertion_method: method to insert the input: 'append', 'before', etc.
-    defaults to 'after'
-  do_not_hide_label: keep the label around so it's css will apply
-  default_value: set the label to this if the value is ""
-  hide_if_empty: hide the label if the value is ""
-  remove_if_empty: remove the label if the value is ""
-*/
-    ,edit_label: function(opts) {
-      var label = opts.label
-        ,input = opts.input;
-
-      _(document.body).blur_all();
-      input.val(label.text());
-      
-      if(opts.do_not_hide_label) label.clear().css('display', '');
-      else label.hide();
-      
-      label[opts.insertion_method || 'after'](input.show());
-      
-      input
-        .size_to_fit()
-        .one('blur', function() {
-          if(opts.complete) {        
-            _(document.body).append(input.hide());
-            opts.complete();
-          }
-          else {
-            _(document.body).append(input.hide());
-            if(opts.default_value) {
-              label
-                .html(input.val() || opts.default_value)
-                .show();
-            }
-            else if(opts.hide_if_empty) {      
-              label
-                .html(input.val())
-                .hide_if_empty();
-            }
-            else if(opts.remove_if_empty) {
-              label
-                .html(input.val())
-                .remove_if_empty();
-            }
-            else if(opts.if_empty) {
-              label
-                .show()
-                .html(input.val())
-                .if_empty(opts.if_empty);
-            }
-            else {
-              label.html(input.val());
-            }
-          }
-        });
-      
-      label.parent().length && opts.success && opts.success.call(label);
-      
-      setTimeout(function(){input.focus();}, 1);
-      return this;
     }
     
     // assumes effen

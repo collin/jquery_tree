@@ -128,8 +128,22 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
     }
     
     ,log: function(msg) {
-      console.log(this[0], msg);
+      console.log(this[0], msg||'');
       return this;
+    }
+    
+    ,whitelist: function(expr) {
+      return this.keypress(function(e) {
+        if( e.charCode > 0 
+        && !String.fromCharCode(e.which).match(expr)) e.preventDefault();
+      });
+    }
+    
+    ,blacklist: function(expr) {
+      return this.keypress(function(e) {
+        if( e.charCode > 0 
+        && String.fromCharCode(e.which).match(expr)) e.preventDefault();
+      });
     }
   });
 
@@ -254,7 +268,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
               }
             });
             function execute() {
-              bindings[binding].call(this, e);
+              bindings[binding].call(e.target, e);
               e.preventDefault();
             }
             if(modified && matched && presses === requested_presses) {
@@ -265,7 +279,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
               _(keys).each(function() {
                 if(this !== "") {
                   if(this == _.shift_nums[key]) {
-                    execute.call(this);
+                    execute();
                   }
                 }
               });
@@ -277,3 +291,4 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
     }
   });  
 })(jQuery);
+
