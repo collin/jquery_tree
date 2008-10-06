@@ -6,12 +6,20 @@
       ;(function(_) {
         _(function() {
           var tree = _('#tree').is_tree({
-            plugins: 'html_editor editable toggle disable destroy'
+            plugins: 'code_editor html_editor editable toggle disable destroy'
           });
           
           tree.data('tree.options').tree_node_input.keybind('<', function(e) {
             var node = _(e.target).parent_node();
             var tag = node.tree().data('tree.options').node.dom.deep_clone(true);
+            tag.child_list().replace(node.child_list());
+            node.replace(tag).log('shi');
+            tag.fn('paint').fn('edit');
+          });
+          
+          tree.data('tree.options').tree_node_input.keybind('-', function(e) {
+            var node = _(e.target).parent_node();
+            var tag = node.tree().data('tree.options').node.code.deep_clone(true);
             tag.child_list().replace(node.child_list());
             node.replace(tag).log('shi');
             tag.fn('paint').fn('edit');

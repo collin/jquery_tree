@@ -4045,6 +4045,10 @@ console.log('lib/plugins/tag_name/tag_name.js');
         }
       });
     }
+    
+    ,to_haml: function() {
+      return '%' + _(this).text();
+    }
   });
   
   _.fn.extend({
@@ -4075,7 +4079,7 @@ console.log('lib/plugins/dom_node/dom_node.js');
         })
         ,data = _.extend(defaults, data);
       
-      //if(_this.child_list().children().length) _this.remove_class('empty');
+      if(_this.child_list().children().length) _this.removeClass('empty');
       
       _this.tag_name_label().html(data.tag_name);
       _this.id_label().html(data.id).hide_if_empty();
@@ -4084,6 +4088,19 @@ console.log('lib/plugins/dom_node/dom_node.js');
       if(data.attributes)
         _this.attribute_list().append(_.object_to_attributes_dom(data.attributes));
       return _this;
+    }
+    
+    ,to_haml: function(indent) {
+      var _this = _(this);
+      
+      return indent 
+        + _this
+            .find('.element')
+              .serialize_children_to_haml()
+        + "\n"
+        + _this
+            .child_list()
+              .serialize_children_to_haml(indent);
     }
   });
 })(jQuery);
@@ -4125,6 +4142,12 @@ console.log('lib/plugins/id/id.js');
         ,hide_if_empty: true
         ,do_not_hide_label: true
       });
+    }
+    
+    ,to_haml: function() {
+      var _this = _(this);
+      if(_this.blank()) return ''
+      return '#' + _this.text();
     }
   });
   
@@ -4175,6 +4198,14 @@ console.log('lib/plugins/classes/classes.js');
       }
       
       return _this.new_class();    
+    }
+    
+    ,to_haml: function() {
+      var classes = _(this).children();
+      if(!classes.length) return '';
+      return '.' + classes.map(function() {
+        return _(this).text();
+      }).join('.');
     }
   });
   
@@ -4305,6 +4336,23 @@ console.log('lib/plugins/attributes/attributes.js');
       if(first_attr.length) return _this.edit_attr(first_attr);
       
       return _this.new_attr();  
+    }
+    
+    ,to_haml: function() {
+      var _this = _(this)
+        ,attrs = _this.children();
+
+      if(!attrs.length) return '';
+
+      return '{'
+        + attrs.map(function(){
+            var __this = _(this)
+            return '"'
+              + __this.find('dt').text()
+              + '" => '
+              + __this.find('dd').text()
+          }).join(', ')
+        +'}';
     }
   });
   
@@ -4646,6 +4694,28 @@ console.log('lib/plugins/code_node/code_node.js');
 })(jQuery);
 
 
+console.log('lib/plugins/haml_serializer/haml_serializer.js');
+;(function(_) {
+
+  _.tree.tree_node.fn({
+    to_haml: function() {
+      return _(this).label().text()
+    }
+  });
+
+  _.fn.extend({
+    serialize_children_to_haml: function(indent) {
+      return this
+        .children()
+          .map(function(){
+            return _(this).fn('to_haml', indent+'  ');
+          })
+            .join('');
+    }
+  });
+})(jQuery);
+
+
 console.log('lib/bubble_custom_event.js');
 // PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
 ;(function() {
@@ -4761,6 +4831,14 @@ console.log('lib/tree.js');
 
     ,paint: function(label) {
       return _(this).label().html(label);
+    }
+    
+    ,to_haml: function(indent) {
+      var _this = _(this);
+      return indent
+        + _this.label.text();
+        + _this.serialize_children_to_haml(indent)
+        + "\n";
     }
   });
 
