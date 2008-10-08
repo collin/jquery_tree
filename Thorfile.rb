@@ -44,6 +44,17 @@ module JQuery
           :selector => selector,
           :node_type => node_type
       end
+      desc 'node_type_plugin', "Generate a named skeleton for a node type plugin"
+      def node_type_plugin name
+        installer = Basis::Installer.new("#{source_dir}/skeletons/node_type_plugin", 
+                                    "#{source_dir}/lib/plugins")
+        ARGV.clear
+        puts "provide name for it\'s label"
+        label = gets.chomp
+
+        installer.install :name => name, 
+          :label => label
+      end
     end
   end
 end

@@ -521,20 +521,35 @@ console.log('lib/plugins/html_editor/html_editor.js');
 ;(function(_) {
 
   function new_class() {
-    var _this = _(this);
-    _this.parent().new_class();
+    _(this).parent().new_class();
+  }
+
+  function edit_id() {
+    _(this).id_label().fn('edit');
+  }
+  
+  function edit_tag_name() {
+    _(this).tag_name().fn('edit');
   }
   
   function bind_input_listeners(options) {
     with(options) {
       classes_input
+        .keybind('<', edit_tag_name)
+        .keybind('#', edit_id)
         .keybind('.', new_class)
         .keybind(',', new_class)
         .keybind('space', new_class);
       id_input
-        .keybind('.', new_class)
-      tag_name_input
+        .keybind('<', edit_tag_name)
         .keybind('.', new_class);
+      tag_name_input
+        .keybind('<', edit_tag_name)
+        .keybind('#', edit_id)
+        .keybind('.', new_class);
+      attr_input
+        .keybind('#', edit_id)
+        .keybind('<', edit_tag_name);
     }
   }
 
@@ -762,6 +777,14 @@ console.log('lib/plugins/editable/editable.js');
 })(jQuery);
 
 
+console.log('lib/plugins/code_node/code_node.js');
+;(function(_) {
+  _.tree.init_code_node_plugin = function(tree, options) {
+  
+  };
+})(jQuery);
+
+
 console.log('lib/bubble_custom_event.js');
 // PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
 ;(function() {
@@ -874,7 +897,7 @@ console.log('lib/tree.js');
       _this.label().fn('edit');
       return _this;
     }
-    
+
     ,paint: function(label) {
       return _(this).label().html(label);
     }
@@ -886,7 +909,7 @@ console.log('lib/tree.js');
         basic: _.tree.tree_node.deep_clone(true)
       }
       ,plugins: ''
-    };    
+    };
   }
 
   var inspection_class = 'inspected';
@@ -898,30 +921,30 @@ console.log('lib/tree.js');
         _.tree['init_'+this+'_plugin'].call(tree, tree, options);
       });
     }
-  
+
     ,label: function() {
       return this.children('span:first');
     }
-  
+
     ,is_tree: function(options) {
       options = _.extend(defaults(), options);
       options.plugins = options.plugins.split(/ /);
-      
+
       var tree = this;
       tree
         .data('tree.options', options)
         .init_tree_plugins(options.plugins, options);
-           
+
       return this
         .click(function(e) {
             e.preventDefault();
             var el = _(e.target)
               ,node = el.parent_node();
-            
+
             if(el.is('input')) return;
             _(options.plugins).each(function() {
-              if(el.hasClass(this)) 
-                if(el[this+'_click']) 
+              if(el.hasClass(this))
+                if(el[this+'_click'])
                   el[this+'_click'](el, node);
             });
           })
@@ -929,45 +952,45 @@ console.log('lib/tree.js');
             var node = _(e.target);
             tree.remove_class_on_all_children_and_self(inspection_class)
             if(!node.is('.tree_node')) node = node.parent_node();
-            node.addClass(inspection_class);      
-          });        
+            node.addClass(inspection_class);
+          });
     }
-    
+
     ,child_list: function() {
       if(this.is('ol')) return this;
       return this.find('ol:first');
     }
-    
+
     ,tree: function() {
       if(this.hasClass('tree')) return this;
       return this.parents('.tree:first');
     }
-    
+
     ,parent_node: function() {
       var node = this.parents('.tree_node:first');
       if(node.length) return node;
       return this.filter('.tree_node');
     }
-    
+
     // assumes effen
     ,deep_clone: function(events) {
       var clone = this.clone(events)
         .mixin(this)
         .clear();
-        
+
       this.children().each(function() {
         clone.append(_(this).deep_clone(events));
       });
-      
+
       return clone;
     }
-    
+
     ,create_node_after: function(contents) {
       var node = this._create_node(contents);
       this.after(node);
       return node;
     }
-    
+
     ,create_node: function(contents) {
       var node = this._create_node(contents);
       this
@@ -976,7 +999,7 @@ console.log('lib/tree.js');
           .append(node);
       return node;
     }
-    
+
     ,_create_node: function(contents, type) {
       if(!type) type = 'basic'
       var node = this.tree().data('tree.options').node[type].deep_clone(true);

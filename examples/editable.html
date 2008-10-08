@@ -10,11 +10,16 @@
               plugins: 'html_editor editable toggle disable destroy'
             });
             
-            tree.keybind('<', function(e) {
+            tree.data('tree.options').tree_node_input.keybind('<', function(e) {
               var node = _(e.target).parent_node();
               var tag = node.tree().data('tree.options').node.dom.deep_clone(true);
               tag.child_list().replace(node.child_list())
-              node.replace(tag)
+              node
+                .find(':input')
+                  .blur()
+                  .end()
+                .replace(tag);
+                
               tag.fn('paint').fn('edit');
             });
             
