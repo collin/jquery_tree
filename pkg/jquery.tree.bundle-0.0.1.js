@@ -4349,8 +4349,9 @@ console.log('lib/plugins/attributes/attributes.js');
             var __this = _(this)
             return '"'
               + __this.find('dt').text()
-              + '" => '
+              + '" => "'
               + __this.find('dd').text()
+              + '"'
           }).join(', ')
         +'}';
     }
@@ -4696,23 +4697,26 @@ console.log('lib/plugins/code_node/code_node.js');
 
 console.log('lib/plugins/haml_serializer/haml_serializer.js');
 ;(function(_) {
-
-  _.tree.tree_node.fn({
-    to_haml: function() {
-      return _(this).label().text()
-    }
-  });
-
   _.fn.extend({
     serialize_children_to_haml: function(indent) {
+      if(indent === undefined) indent = '';
+      else indent += '  ';
       return this
         .children()
           .map(function(){
-            return _(this).fn('to_haml', indent+'  ');
+            return _(this).fn('to_haml', indent);
           })
             .join('');
     }
   });
+})(jQuery);
+
+
+console.log('lib/plugins/json_marshal/json_marshal.js');
+;(function(_) {
+  _.tree.init_json_marshal_plugin = function(tree, options) {
+  
+  };
 })(jQuery);
 
 
@@ -4836,9 +4840,11 @@ console.log('lib/tree.js');
     ,to_haml: function(indent) {
       var _this = _(this);
       return indent
-        + _this.label.text();
-        + _this.serialize_children_to_haml(indent)
-        + "\n";
+        + _this.label().text()
+        + "\n"
+        + _this
+            .child_list()
+              .serialize_children_to_haml(indent);
     }
   });
 
@@ -4859,10 +4865,24 @@ console.log('lib/tree.js');
       _(plugins).each(function() {
         _.tree['init_'+this+'_plugin'].call(tree, tree, options);
       });
+      return this;
     }
 
     ,label: function() {
       return this.children('span:first');
+    }
+
+    ,swap_node_type: function(type) {
+      var new_node = this.tree().data('tree.options').node[type].deep_clone(true);
+      new_node
+        .child_list()
+          .replace(this.child_list());
+          
+      this.replace(new_node);
+      new_node
+        .fn('paint')
+        .fn('edit');
+      return new_node;
     }
 
     ,is_tree: function(options) {
@@ -4872,7 +4892,13 @@ console.log('lib/tree.js');
       var tree = this;
       tree
         .data('tree.options', options)
-        .init_tree_plugins(options.plugins, options);
+        .init_tree_plugins(options.plugins, options)
+        .fn({
+          to_haml: function() {
+            return _(this).serialize_children_to_haml();
+          }
+        });
+        
 
       return this
         .click(function(e) {

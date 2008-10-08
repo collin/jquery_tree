@@ -10,19 +10,7 @@
           });
           
           tree.data('tree.options').tree_node_input.keybind('<', function(e) {
-            var node = _(e.target).parent_node();
-            var tag = node.tree().data('tree.options').node.dom.deep_clone(true);
-            tag.child_list().replace(node.child_list());
-            node.replace(tag).log('shi');
-            tag.fn('paint').fn('edit');
-          });
-          
-          tree.data('tree.options').tree_node_input.keybind('-', function(e) {
-            var node = _(e.target).parent_node();
-            var tag = node.tree().data('tree.options').node.code.deep_clone(true);
-            tag.child_list().replace(node.child_list());
-            node.replace(tag).log('shi');
-            tag.fn('paint').fn('edit');
+            _(e.target).parent_node().swap_node_type('dom');
           });
           
           var awesome = tree.create_node('Awesome');
@@ -37,6 +25,8 @@
           var subset = set.create_node('Subset');
           subset.create_node('Other Things');
           subset.create_node('Fun Times');
+          
+          console.log(tree.fn('to_haml'));
         });
       })(jQuery)
   %body
