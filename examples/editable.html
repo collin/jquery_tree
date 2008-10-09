@@ -13,13 +13,8 @@
             tree.data('tree.options').tree_node_input.keybind('<', function(e) {
               var node = _(e.target).parent_node();
               var tag = node.tree().data('tree.options').node.dom.deep_clone(true);
-              tag.child_list().replace(node.child_list())
-              node
-                .find(':input')
-                  .blur()
-                  .end()
-                .replace(tag);
-                
+              tag.child_list().replace(node.child_list());
+              node.replace(tag).log('shi');
               tag.fn('paint').fn('edit');
             });
             

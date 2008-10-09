@@ -3668,11 +3668,14 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
       this.find('input').blur();
       return this;
     }
-    
+ 
     ,replace: function(replacement) {
       return this.map(function() {
         _(this)
           .after(replacement)
+          .find(':input')
+            .blur()
+            .end()
           .remove();
         return this;
       });
@@ -3846,7 +3849,7 @@ console.log('vendor/jquery_keybinder/jquery.keybinder.js');
 
 
 ;(jQuery(function() {
-  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:12px;font-family:monospace}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree input{border:2px solid black;border-top:0;border-bottom:0;margin:0;padding:0;-moz-border-radius:5px;padding-left:5px;background-color:#fffaaa;font-size:12px;font-family:monospace}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{display:inline}li.tree_node label,li.tree_node input.tag_name{color:blue;font-weight:bold}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{color:green}li.tree_node ul.classes{display:inline;padding:0;margin:0}li.tree_node ul.classes li{padding:0;margin:0;background:transparent;display:inline}li.tree_node ul.classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node input.attr{color:blue}li.tree_node input.value{color:red}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}</style>");
+  jQuery("head").append("<style>.tree{list-style:none;padding:0px;margin:0px;font-size:12px;font-family:monospace}.tree .tree_node{line-height:20px;padding-left:10px;white-space:nowrap;display:block;clear:both;margin-left:0px}.tree input{border:2px solid black;border-top:0;border-bottom:0;margin:0;padding:0;-moz-border-radius:5px;padding-left:5px;background-color:#fffaaa;font-size:12px;font-family:monospace}.tree .inspected{background-color:#fcc}.tree .inspected .tree_node{background-color:white}.tree .disabled div,.tree .disabled div *{opacity:.5}.tree ol,.tree ul{list-style:none}.tree ol{white-space:nowrap;background-color:white;padding:0}.tree .inspected> button.toggle{background-image:url(icons/close.png)}.tree .empty button.toggle{background:none}.tree .toggle{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;width:16px;height:16px;top:2px}.tree .toggle.closed{background-image:url(icons/open.png) !important}.tree.empty > button.toggle{visibility:hidden}li.inspected> button.disable{background-color:transparent;background-image:url(icons/block.png)}li button.disable{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px}li button.disable.active{background-image:url(icons/active_block.png)}li.inspected> button.destroy{background-color:transparent;background-image:url(icons/small_cross.png)}li button.destroy{border:none;display:inline;position:relative;top:4px;float:left;width:12px;height:12px;background:none;margin-right:10px;opacity:.5}li button.destroy:hover{opacity:1}li.tree_node label{display:inline}li.tree_node label,li.tree_node input.tag_name{color:blue;font-weight:bold}li.tree_node .element{display:inline;position:relative;line-height:20px}li.tree_node .element:before,li.tree_node .element:after{color:#999}li.tree_node .element:before{content:\"<\"}li.tree_node .element:after{content:\">\"}li.tree_node .element *{cursor:text}li.tree_node .id{display:inline;color:red}li.tree_node .id:before,li.tree_node .id_input:before{content:\"#\"}li.tree_node .classes{color:green}li.tree_node ul.classes{display:inline;padding:0;margin:0}li.tree_node ul.classes li{padding:0;margin:0;background:transparent;display:inline}li.tree_node ul.classes li:before{content:\".\";color:black;font-weight:bold}li.tree_node input.attr{color:blue}li.tree_node input.value{color:red}li.tree_node .attributes,li.tree_node dd,li.tree_node dt{display:inline;margin:0;padding:0}li.tree_node .attributes> li,li.tree_node dd> li,li.tree_node dt> li{margin:0;padding:0;display:inline}li.tree_node dt{color:blue;margin-left:.3em}li.tree_node dt:after{content:\"=\";color:black}li.tree_node dd{color:red}li.tree_node dd:before,li.tree_node dd:after{content:'\"';color:black}li.tree_node .source{display:inline;position:relative;line-height:20px}li.tree_node .source *{cursor:text}</style>");
 }));
 
 if(!jQuery.tree) jQuery.tree = {};
@@ -3884,6 +3887,12 @@ jQuery.tree.attr_input = jQuery("<input class='attr' type='text' />");
 jQuery.tree.value_input = jQuery("<input class='value' type='text' />");
 
 jQuery.tree.tree_node_input = jQuery("<input class='tree_node' type='text' />");
+
+jQuery.tree.code_node_label = jQuery("");
+
+jQuery.tree.code_node_input = jQuery("<input class='code_node' type='text' />");
+
+jQuery.tree.code_node = jQuery("<li class='code_node empty'>  <div class='source'></div>  <ol></ol></li>");
 
 jQuery.tree.tree_node_input = jQuery("<input class='label' type='text' />");
 
@@ -4626,9 +4635,14 @@ console.log('lib/plugins/editable/editable.js');
 
 console.log('lib/plugins/code_node/code_node.js');
 ;(function(_) {
-  _.tree.init_code_node_plugin = function(tree, options) {
-  
-  };
+  _.tree.code_node.fn({
+    edit: function() {
+    }
+    
+    ,paint: function(data) {
+      var _this = _(this)
+    }
+  });
 })(jQuery);
 
 
