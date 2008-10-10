@@ -1,4 +1,4 @@
-console.log('vendor/effen/jquery.fn.js');
+console.log('/home/collin/code/jquery_tree/vendor/effen/jquery.fn.js');
 (function($) {
   $.fn.fn = function() {
     var self = this;
@@ -43,7 +43,7 @@ console.log('vendor/effen/jquery.fn.js');
 })(jQuery);
 
 
-console.log('vendor/jquery_extensions/jquery.extension.js');
+console.log('/home/collin/code/jquery_tree/vendor/jquery_extensions/jquery.extension.js');
 ;(function(_){
   _.create_element = function(tag) {
     return _('<'+tag+'>');
@@ -154,7 +154,7 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
 })(jQuery);
 
 
-console.log('vendor/jquery_keybinder/jquery.keybinder.js');
+console.log('/home/collin/code/jquery_tree/vendor/jquery_keybinder/jquery.keybinder.js');
 // Look, I'm like all the cool kids!
 ;(function(_) {
   _.special_keys = {

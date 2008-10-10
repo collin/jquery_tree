@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 require 'rubygems'
 
 require 'continuous_builder'
@@ -14,7 +13,6 @@ Pathname.send :alias_method, '/', '+'
 module JQuery
   module Tree
     Version = "0.0.1"
-    UriRoot = ""
     Root = Pathname.new(Pathname(__FILE__).dirname)/'..'
     class Builder < ContinuousBuilder
       watches :examples,
@@ -111,7 +109,3 @@ module JQuery
     end
   end
 end
-
-builder = JQuery::Tree::Builder.new
-builder.build_all
-builder.build_continuously

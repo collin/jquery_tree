@@ -2,9 +2,28 @@ require 'rubygems'
 require 'thor/tasks'
 require 'basis/installer'
 require 'pathname'
+require Dir.pwd + '/tools/build'
 
 module JQuery
   module Tree
+    class Build < Thor
+      def builder_with_root uri_root
+        JQuery::Tree.const_set :UriRoot, uri_root
+        JQuery::Tree::Builder.new
+      end
+    
+      public
+      desc 'package', "build package once"
+      def package uri_root = ""
+        builder_with_root(uri_root).build_all
+      end
+      
+      desc 'continuously', 'watch for changes to the file system and rebuild the package'
+      def continuously uri_root = ""
+        builder_with_root(uri_root).build_continuously
+      end
+    end
+    
     class Gen < Thor
       private
       def source_dir

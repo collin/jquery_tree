@@ -3549,7 +3549,7 @@ jQuery.each([ "Height", "Width" ], function(i, name){
 });})();
 
 
-console.log('vendor/effen/jquery.fn.js');
+console.log('/home/collin/code/jquery_tree/vendor/effen/jquery.fn.js');
 (function($) {
   $.fn.fn = function() {
     var self = this;
@@ -3594,7 +3594,7 @@ console.log('vendor/effen/jquery.fn.js');
 })(jQuery);
 
 
-console.log('vendor/jquery_extensions/jquery.extension.js');
+console.log('/home/collin/code/jquery_tree/vendor/jquery_extensions/jquery.extension.js');
 ;(function(_){
   _.create_element = function(tag) {
     return _('<'+tag+'>');
@@ -3705,7 +3705,7 @@ console.log('vendor/jquery_extensions/jquery.extension.js');
 })(jQuery);
 
 
-console.log('vendor/jquery_keybinder/jquery.keybinder.js');
+console.log('/home/collin/code/jquery_tree/vendor/jquery_keybinder/jquery.keybinder.js');
 // Look, I'm like all the cool kids!
 ;(function(_) {
   _.special_keys = {
@@ -3896,7 +3896,7 @@ jQuery.tree.code_node = jQuery("<li class='code_node empty'>  <div class='source
 
 jQuery.tree.tree_node_input = jQuery("<input class='label' type='text' />");
 
-console.log('lib/plugins/toggle/toggle.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/toggle/toggle.js');
 ;(function(_) {
   var closed_class = 'closed'
     ,expand_event = 'expand'
@@ -3947,7 +3947,7 @@ console.log('lib/plugins/toggle/toggle.js');
 })(jQuery);
 
 
-console.log('lib/plugins/disable/disable.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/disable/disable.js');
 ;(function(_) {
   var active_class = 'active'
     ,disable_event = 'disable'
@@ -3980,7 +3980,7 @@ console.log('lib/plugins/disable/disable.js');
 })(jQuery);
 
 
-console.log('lib/plugins/destroy/destroy.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/destroy/destroy.js');
 ;(function(_) {
   var destroy_event = 'destroy'
 
@@ -4004,7 +4004,7 @@ console.log('lib/plugins/destroy/destroy.js');
 })(jQuery);
 
 
-console.log('lib/plugins/tag_name/tag_name.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/tag_name/tag_name.js');
 ;(function(_) {
   _.tree.tag_name_label.click(function(e) {
     _(this).fn('edit');
@@ -4062,7 +4062,7 @@ console.log('lib/plugins/tag_name/tag_name.js');
 })(jQuery);
 
 
-console.log('lib/plugins/dom_node/dom_node.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/dom_node/dom_node.js');
 ;(function(_) {
   _.tree.dom_node.fn({
     edit: function() {
@@ -4106,7 +4106,7 @@ console.log('lib/plugins/dom_node/dom_node.js');
 })(jQuery);
 
 
-console.log('lib/plugins/id/id.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/id/id.js');
 ;(function(_) {
   _.tree.id_label.click(function(e) {
     e.preventDefault();
@@ -4159,7 +4159,7 @@ console.log('lib/plugins/id/id.js');
 })(jQuery);
 
 
-console.log('lib/plugins/classes/classes.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/classes/classes.js');
 ;(function(_) {
   _.tree.classes_label.click(function(e) {
     e.preventDefault();
@@ -4281,7 +4281,7 @@ console.log('lib/plugins/classes/classes.js');
 })(jQuery);
 
 
-console.log('lib/plugins/attributes/attributes.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/attributes/attributes.js');
 ;(function(_) {
   _.tree.attributes_label.click(function(e) {
     e.preventDefault();
@@ -4422,7 +4422,7 @@ console.log('lib/plugins/attributes/attributes.js');
 })(jQuery);
 
 
-console.log('lib/plugins/html_editor/html_editor.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/html_editor/html_editor.js');
 ;(function(_) {
 
   function new_class() {
@@ -4472,7 +4472,7 @@ console.log('lib/plugins/html_editor/html_editor.js');
 })(jQuery);
 
 
-console.log('lib/plugins/code_editor/code_editor.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/code_editor/code_editor.js');
 /*
 
 a = 1
@@ -4508,7 +4508,7 @@ $
 })(jQuery);
 
 
-console.log('lib/plugins/editable/editable.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/editable/editable.js');
 ;(function(_) {
   _.fn.interactive_editing = function(options) {
   
@@ -4682,7 +4682,7 @@ console.log('lib/plugins/editable/editable.js');
 })(jQuery);
 
 
-console.log('lib/plugins/code_node/code_node.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/code_node/code_node.js');
 ;(function(_) {
   _.tree.code_node.fn({
     edit: function() {
@@ -4695,7 +4695,7 @@ console.log('lib/plugins/code_node/code_node.js');
 })(jQuery);
 
 
-console.log('lib/plugins/haml_serializer/haml_serializer.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/haml_serializer/haml_serializer.js');
 ;(function(_) {
   _.fn.extend({
     serialize_children_to_haml: function(indent) {
@@ -4712,7 +4712,7 @@ console.log('lib/plugins/haml_serializer/haml_serializer.js');
 })(jQuery);
 
 
-console.log('lib/plugins/json_marshal/json_marshal.js');
+console.log('/home/collin/code/jquery_tree/lib/plugins/json_marshal/json_marshal.js');
 ;(function(_) {
   _.tree.init_json_marshal_plugin = function(tree, options) {
   
@@ -4720,7 +4720,7 @@ console.log('lib/plugins/json_marshal/json_marshal.js');
 })(jQuery);
 
 
-console.log('lib/bubble_custom_event.js');
+console.log('/home/collin/code/jquery_tree/lib/bubble_custom_event.js');
 // PATCH http://dev.jquery.com/attachment/ticket/3379/bubble.patch
 ;(function() {
 
@@ -4824,7 +4824,7 @@ jQuery.event.trigger = function(type, data, elem, donative, extra) {
 console.warn('PATCHED bubble custom event')
 
 
-console.log('lib/tree.js');
+console.log('/home/collin/code/jquery_tree/lib/tree.js');
 ;(function(_){
   _.tree.tree_node.fn({
     edit: function() {
