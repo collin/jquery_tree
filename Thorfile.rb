@@ -23,8 +23,6 @@ module JQuery
       method_options 'target' => :optional
       def package uri_root = ""
         create_builder(uri_root, options).build_all
-        
-        puts options.inspect
       end
       
       desc 'continuously', 'watch for changes to the file system and rebuild the package'

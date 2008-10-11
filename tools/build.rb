@@ -105,6 +105,9 @@ module JQuery
         f.write((Root/'vendor'/'jquery'/'jquery-1.2.6.js').read << "\n\n#{vendor_string}\n\n#{scripts_string}")
         f.close()
         
+        FileUtils.rm Pathname.glob(Root/'lib'/'**'/'*.{html,css}')
+        
+        (build_target/'icons').unlink
         FileUtils.ln_s((Root/'assets'/'icons'), (build_target/'icons'))      
       end
       
