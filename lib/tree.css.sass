@@ -1,0 +1,43 @@
+.tree  
+  :list-style none
+  :padding 0px
+  :margin 0px
+  :font
+    :size 12px
+    :family monospace
+    
+  .tree_node
+    :line-height 20px
+    :padding-left 10px
+    :white-space nowrap
+    :display block
+    :clear both
+    :margin-left 0px
+
+  input
+    :border 2px solid black
+      :top 0
+      :bottom 0
+    :margin 0
+    :padding 0
+    :-moz-border-radius 5px
+    :padding-left 5px
+    :background-color #fffaaa
+    :font
+      :size 12px
+      :family monospace
+    
+  .inspected
+    :background-color #fcc
+    .tree_node
+      :background-color white
+
+  .disabled div
+    &, & *
+      :opacity .5
+  ol, ul
+    :list-style none
+  ol
+    :white-space nowrap
+    :background-color white
+    :padding 0

@@ -1,0 +1,18 @@
+@import button_plugin.sass
+.tree
+  .inspected
+    &> button.toggle
+      :background-image url(#{JQuery::Tree::UriRoot}icons/close.png)
+
+  .empty button.toggle
+    :background none
+
+  .toggle
+    +button_plugin
+    :width 16px
+    :height 16px
+    :top 2px
+    &.closed
+      :background-image url(#{JQuery::Tree::UriRoot}icons/open.png) !important
+  &.empty > button.toggle
+    :visibility hidden

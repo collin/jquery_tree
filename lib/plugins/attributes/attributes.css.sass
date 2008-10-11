@@ -1,0 +1,25 @@
+@import label_plugin.sass
+li.tree_node
+  input.attr
+    :color blue
+  input.value
+    :color red
+  .attributes, dd, dt
+    :display inline
+    :margin 0
+    :padding 0
+    &> li 
+      :margin 0
+      :padding 0
+      :display inline
+  dt
+    :color blue
+    :margin-left .3em
+    &:after
+      :content "="
+      :color black
+  dd
+    :color red
+  dd:before, dd:after
+    :content '"'
+    :color black

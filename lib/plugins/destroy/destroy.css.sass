@@ -1,0 +1,14 @@
+@import button_plugin.sass
+li
+  &.inspected
+    &> button.destroy
+      :background
+        :color transparent
+        :image url(#{JQuery::Tree::UriRoot}icons/small_cross.png) 
+
+  button.destroy
+    +button_plugin
+    :margin-right 10px
+    :opacity .5
+    &:hover
+      :opacity 1

@@ -1,0 +1,13 @@
+li.tree_node
+  .element
+    :display inline
+    :position relative
+    :line-height 20px
+    &:before, &:after
+      :color #999
+    &:before
+      :content "<"
+    &:after
+      :content ">"
+    *
+      :cursor text

@@ -1,0 +1,10 @@
+@import button_plugin.sass
+li
+  &.inspected
+    &> button.<%= name %>
+      :background
+        :color transparent
+        :image url(#{JQuery::Tree::UriRoot}/icons/<%= name %>.png) 
+
+  button.<%= name %>
+    +button_plugin
