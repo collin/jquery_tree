@@ -15,6 +15,7 @@ module JQuery
     Version = "0.0.1"
     Root = Pathname.new(Pathname(__FILE__).dirname)/'..'
     class Builder < ContinuousBuilder
+      Unique = "jquery_tree"
       watches :examples,
         :files => Root/'examples'/'**'/'*.html.haml',
         :module => Haml
@@ -27,7 +28,7 @@ module JQuery
         :files => Root/'lib'/'**'/'*.css.sass',
         :module => Sass,
         :style => :compressed,
-        :load_paths => Pathname.glob(Root/'lib'/'**'/'sass')
+        :load_paths => Pathname.glob(Root/'lib'/'**')
         
       watches :resources,
         :files => Root/'lib'/'**'/'*{.css,.js,.html}',
@@ -38,6 +39,7 @@ module JQuery
         :files => Root/'vendor'/'**'/'*.js',
           :update => :build_embedded,
           :wait_for_all_edits => true
+ 
 =begin loop of death      
       watches :self, 
         :files => Root/'script'/'build',
@@ -62,9 +64,13 @@ module JQuery
         
         style_el = "<style>#{stylesheets}</style>"
         
-        scripts << StringIO.new(%{;(jQuery(function() {
+      scripts << StringIO.new(%{
+function load_styles_#{Unique}() {
   jQuery("head").append("#{style_el}");
-}));})
+}
+if(document.body) load_styles_#{Unique}();
+else jQuery(load_styles_#{Unique});
+      })
 
         scripts << StringIO.new("if(!jQuery.tree) jQuery.tree = {};")
         
@@ -104,11 +110,12 @@ module JQuery
         f = File.open(build_target/"jquery.tree.bundle-#{Version}.js", 'w+')
         f.write((Root/'vendor'/'jquery'/'jquery-1.2.6.js').read << "\n\n#{vendor_string}\n\n#{scripts_string}")
         f.close()
-        
-        FileUtils.rm Pathname.glob(Root/'lib'/'**'/'*.{html,css}')
-        
-        (build_target/'icons').unlink
-        FileUtils.ln_s((Root/'assets'/'icons'), (build_target/'icons'))      
+                
+        #FileUtils.rm(Pathname.glob(Root/'lib'/'**'/'*.{html,css}'))
+               
+        icons = (build_target/'icons')
+        icons.unlink if icons.exist?
+        FileUtils.ln_s((Root/'assets'/'icons'), icons)      
       end
       
       def build_target
