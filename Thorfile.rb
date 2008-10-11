@@ -7,20 +7,32 @@ require Dir.pwd + '/tools/build'
 module JQuery
   module Tree
     class Build < Thor
-      def builder_with_root uri_root
+      def create_builder uri_root, options
         JQuery::Tree.const_set :UriRoot, uri_root
-        JQuery::Tree::Builder.new
+        builder = JQuery::Tree::Builder
+        if options.include? 'target'        
+          builder.send :define_method, :build_target do 
+            Pathname.new options[:target] 
+          end
+        end
+        builder.new
       end
     
       public
       desc 'package', "build package once"
+      method_options 'target' => :optional
       def package uri_root = ""
-        builder_with_root(uri_root).build_all
+        create_builder(uri_root, options).build_all
+        
+        puts options.inspect
       end
       
       desc 'continuously', 'watch for changes to the file system and rebuild the package'
+      method_options 'target' => :optional
       def continuously uri_root = ""
-        builder_with_root(uri_root).build_continuously
+        b = create_builder(uri_root, options)
+        b.build_all
+        b.build_continuously
       end
     end
     

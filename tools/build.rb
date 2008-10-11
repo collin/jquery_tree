@@ -89,22 +89,27 @@ module JQuery
         vendor << Root/'vendor'/'jquery_extensions'/'jquery.extension.js'
         vendor << Root/'vendor'/'jquery_keybinder'/'jquery.keybinder.js'
         
-        f = File.open(Root/'pkg'/"jquery.tree-#{Version}.js", 'w+')
+        f = File.open(build_target/"jquery.tree-#{Version}.js", 'w+')
         f.write(scripts_string = scripts.map do |script| 
           (script.is_a?(StringIO) ? "" : "console.log('#{script}');\n")+script.read
         end.join("\n\n"))
         f.close()
         
-        f = File.open(Root/'pkg'/"jquery.tree.vendor_bundle-#{Version}.js", 'w+')
+        f = File.open(build_target/"jquery.tree.vendor_bundle-#{Version}.js", 'w+')
         f.write(vendor_string = vendor.map do |script| 
           "console.log('#{script}');\n"+script.read
         end.join("\n\n"))
         f.close()
         
-        f = File.open(Root/'pkg'/"jquery.tree.bundle-#{Version}.js", 'w+')
+        f = File.open(build_target/"jquery.tree.bundle-#{Version}.js", 'w+')
         f.write((Root/'vendor'/'jquery'/'jquery-1.2.6.js').read << "\n\n#{vendor_string}\n\n#{scripts_string}")
         f.close()
         
+        FileUtils.ln_s((Root/'assets'/'icons'), (build_target/'icons'))      
+      end
+      
+      def build_target
+        Root/'pkg'
       end
     end
   end
