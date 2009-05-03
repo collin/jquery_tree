@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <script src='../pkg/jquery.tree.bundle-0.0.1.js?'>    </script>
+    <script type='text/javascript'>
+      //<![CDATA[
+        ;(function(_) {
+          _(function() {
+            var tree = _('#tree').is_tree({
+              plugins: 'editable toggle disable destroy'
+            });
+            
+            var awesome = tree.create_node('Awesome');
+            
+            awesome.create_node('Cake');
+            awesome.create_node('Bacon');
+            awesome.create_node('jQuery');
+            
+            var set = tree.create_node('Set');
+            set.create_node('Things');
+            
+            var subset = set.create_node('Subset');
+            subset.create_node('Other Things');
+            subset.create_node('Fun Times');
+            
+            console.log(tree.fn('to_haml'));
+          });
+        })(jQuery)
+      //]]>
+    </script>
+  </head>
+  <body>
+    <ol class='tree' id='tree'></ol>
+  </body>
+</html>
