@@ -2,14 +2,16 @@ require 'rubygems'
 require 'thor/tasks'
 require 'basis/installer'
 require 'pathname'
-require Dir.pwd + '/tools/build'
+load Dir.pwd + '/tools/build.rb'
+
+puts JQuery::Tree.constants
 
 module JQuery
   module Tree
     class Build < Thor
       def create_builder uri_root, options
-        JQuery::Tree.const_set :UriRoot, uri_root
-        builder = JQuery::Tree::Builder
+        ::JQuery::Tree.const_set :UriRoot, uri_root
+        builder = ::JQuery::Tree::Builder
         if options.include? 'target'        
           builder.send :define_method, :build_target do 
             Pathname.new options[:target] 

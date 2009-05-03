@@ -114,8 +114,8 @@ else jQuery(load_styles_#{Unique});
         #FileUtils.rm(Pathname.glob(Root/'lib'/'**'/'*.{html,css}'))
                
         icons = (build_target/'icons')
-        icons.unlink if icons.exist?
-        FileUtils.ln_s((Root/'assets'/'icons'), icons)      
+        link_target = (Root/'assets'/'icons')
+        FileUtils.ln_s(link_target, icons) unless link_target.exist?    
       end
       
       def build_target
@@ -124,3 +124,4 @@ else jQuery(load_styles_#{Unique});
     end
   end
 end
+
