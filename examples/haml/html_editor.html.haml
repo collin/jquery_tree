@@ -40,9 +40,8 @@
         tree.data('tree.options').tree_node_input.keybind('<', function(e) {
           _(e.target).parent_node().swap_node_type('dom');
         });
-        
         function notify(msg) {
-          return function(e) {
+          return function(e, arg1) {
             console.log(msg, e.target);
           };
         }
@@ -54,18 +53,50 @@
         tree.bind('enable', notify('enable'));
         
         tree.bind('destroy', notify('destroy'));
+        
+        tree.bind('edit', notify('edit'));        
+        tree.bind('edit_tag_name', notify('edit tag'));        
+        tree.bind('edit_id', notify('edit id'));        
+        tree.bind('edit_class', notify('edit class'));        
+        tree.bind('edit_attr', notify('edit attr'));      
+        tree.bind('edit_value', notify('edit value'));
+        
+        tree.bind('commit', notify('commit'));
+        
       });
   %body
+      
     %ol#tree.tree
       %h4 double click to add a new node
       %h4 click to edit
     %dl.keybindings
-      %li
+      %li.less_than
+        %dd Convert this plaintext node into a DOM node.
+        %dd Edit the tag name of this node.      
+      %li.pound
+        %dt #
+        %dd Edit this node's ID attribute
+      %li.period
+        %dt .
+        %dd Add a new class name to this node.
+      %li.tab
         %dt tab
-        %dd switch to the next input, tag_name -> id, id -> class, etc
-      %li
+        %dd Edit this node's class attributes
+        %dd Edit the next class name for this node.
+        %dd Switch to edit this node's ID attribute
+        %dd If last class name, edit first attribute.
+        %dd If no attributes, add new attribute.
+      %li.shift_tab
         %dt shift+tab
-        %dd switch in the opposite direction
+        %dd Edit this node's ID attribute
+        %dd Edit the tag name of this node.
+      %li.spacebar
+        %dt spacebar
+        %dd Add a new class name to this node.
+      %li.equal
+        %dt =
+        %dd Add a new html attribute to this node.
+        %dd Edit the value for this attribute. 
       %li
         %dt enter
         %dd insert a new element after the current element
