@@ -108,7 +108,7 @@ else jQuery(load_styles_#{Unique});
         f.close()
         
         f = File.open(build_target/"jquery.tree.bundle-#{Version}.js", 'w+')
-        f.write((Root/'vendor'/'jquery'/'jquery-1.2.6.js').read << "\n\n#{vendor_string}\n\n#{scripts_string}")
+        f.write((Root/'vendor'/'jquery'/'jquery.js').read << "\n\n#{vendor_string}\n\n#{scripts_string}")
         f.close()
                 
         #FileUtils.rm(Pathname.glob(Root/'lib'/'**'/'*.{html,css}'))

@@ -32,7 +32,7 @@
   remove_if_empty: remove the label if the value is ""
 */  
       var node = _(this).parent_node();
-      node.triggerHandler('edit_<%= name %>');
+      node.trigger('edit_<%= name %>');
       return node.edit_label({
         label: node.tree().data('tree.options').<%= name %>_label()
         ,input: _.tree.<%= name %>_input
